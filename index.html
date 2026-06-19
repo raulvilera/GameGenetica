@@ -150,20 +150,34 @@
   }
   .phenotype-title{font-weight:900;color:var(--purple-dark);font-size:.86rem;margin-bottom:4px;text-transform:uppercase;}
   .phenotype-sub{font-size:.74rem;color:#666;margin-bottom:10px;}
-  .phenotype-list{display:flex;flex-direction:column;gap:8px;}
+  .phenotype-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(82px,1fr));gap:8px;}
   .phenotype-empty{font-size:.8rem;color:#777;background:#f8fafc;border:1px dashed #c7ccd6;border-radius:10px;padding:10px;}
-  .phenotype-item{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;background:#fff;border:1px solid #dde2ea;border-radius:10px;padding:8px;box-shadow:0 2mm 3mm rgba(34,39,48,.13);}
-  .phenotype-img{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;background:#eef1f7;box-shadow:inset 2px 2px 5px rgba(0,0,0,.08),inset -2px -2px 5px rgba(255,255,255,.75);}
-  .phenotype-name{font-size:.78rem;font-weight:800;color:#333;line-height:1.25;}
-  .phenotype-genos{font-size:.68rem;color:#666;margin-top:2px;}
-  .phenotype-count{font-size:.78rem;font-weight:900;color:#fff;background:var(--purple);border-radius:999px;padding:4px 8px;white-space:nowrap;}
+  .phenotype-item{display:flex;flex-direction:column;align-items:center;gap:5px;background:#fff;border:1px solid #dde2ea;border-radius:10px;padding:8px;box-shadow:0 2mm 3mm rgba(34,39,48,.13);text-align:center;min-height:112px;}
+  .phenotype-img{width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.55rem;background:#eef1f7;box-shadow:inset 2px 2px 5px rgba(0,0,0,.08),inset -2px -2px 5px rgba(255,255,255,.75);}
+  .phenotype-name{font-size:.68rem;font-weight:800;color:#333;line-height:1.15;}
+  .phenotype-genos{font-size:.68rem;color:#666;font-weight:900;}
+  .phenotype-position{font-size:.62rem;color:#fff;background:var(--purple);border-radius:999px;padding:2px 7px;font-weight:900;}
 
   .questions{margin-top:16px;border-top:1px dashed #ccc;padding-top:14px;}
-  .question{margin-bottom:3mm;padding:10px 12px;border-radius:10px;background:#fff;box-shadow:0 2mm 3mm rgba(34,39,48,.14);}
-  .qtext{font-weight:700;font-size:.9rem;margin-bottom:6px;}
-  .opts{display:flex;flex-direction:column;gap:5px;}
-  .opt{font-size:.86rem;display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;cursor:pointer;}
-  .opt:hover{background:#eef1fb;}
+  .question{
+    margin-bottom:3mm;padding:12px;border-radius:10px;
+    background:linear-gradient(135deg,#061938 0%,#0b2f68 48%,#02040a 100%);
+    box-shadow:0 2mm 3mm rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.16);
+  }
+  .qtext{font-weight:800;font-size:.9rem;margin-bottom:8px;color:#fff;}
+  .opts{display:flex;flex-direction:column;gap:7px;}
+  .opt{font-size:.86rem;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;cursor:pointer;color:#eaf2ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);transition:transform .15s ease,box-shadow .2s ease,background .2s ease,color .2s ease;}
+  .opt:hover{background:rgba(255,255,255,.15);}
+  .opt.checked,
+  .opt:has(input:checked){
+    background:linear-gradient(145deg,#0d47a1,#062a63);
+    color:#fff;font-weight:900;
+    border-color:#7fb5ff;
+    box-shadow:0 2mm 3mm rgba(0,0,0,.35),-2px -2px 6px rgba(255,255,255,.18),inset 0 1px 0 rgba(255,255,255,.28);
+    transform:translateY(-2px);
+  }
+  .opt.checked span,
+  .opt:has(input:checked) span{font-weight:900;}
   .opt input{cursor:pointer;}
 
   .submit-area{text-align:center;margin-top:34px;}
@@ -528,7 +542,7 @@ TRAITS.forEach(trait=>{
 
   const genotypeColors = buildGenotypeColorMap(trait);
 
-  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}, genotypeColors:genotypeColors, phenotypeCounts:{}};
+  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}, genotypeColors:genotypeColors, phenotypeItems:[]};
 
   const card=document.createElement("div");
   card.className="trait-card";
@@ -577,7 +591,7 @@ TRAITS.forEach(trait=>{
       </div>
       <div class="phenotype-panel" id="phenotypePanel_${trait.id}">
         <div class="phenotype-title">Influência dos genótipos</div>
-        <div class="phenotype-sub">As imagens aparecem conforme as combinações corretas são formadas.</div>
+        <div class="phenotype-sub">Cada combinação correta aparece como uma imagem individual na grade.</div>
         <div class="phenotype-list" id="phenotypeList_${trait.id}">
           <div class="phenotype-empty">Monte o quadro para visualizar os fenótipos gerados.</div>
         </div>
@@ -772,33 +786,25 @@ function makeAlleleTile(traitId,side,value,idx){
   });
   return chip;
 }
-function updatePhenotypePanel(trait,genotype,phenotype,colorInfo){
+function updatePhenotypePanel(trait,r,c,genotype,phenotype,colorInfo){
   const st=state[trait.id];
-  const key=phenotype.label;
-  if(!st.phenotypeCounts[key]){
-    st.phenotypeCounts[key]={icon:phenotype.icon,label:phenotype.label,count:0,genotypes:new Set(),color:colorInfo};
-  }
-  st.phenotypeCounts[key].count++;
-  st.phenotypeCounts[key].genotypes.add(genotype);
-  if(colorInfo) st.phenotypeCounts[key].color=colorInfo;
+  st.phenotypeItems.push({row:r+1,col:c+1,icon:phenotype.icon,label:phenotype.label,genotype,color:colorInfo});
 
   const list=document.getElementById("phenotypeList_"+trait.id);
-  const items=Object.values(st.phenotypeCounts).sort((a,b)=>b.count-a.count || a.label.localeCompare(b.label));
+  const items=st.phenotypeItems.slice().sort((a,b)=>a.row-b.row || a.col-b.col);
   list.innerHTML=items.map(item=>{
     const border=item.color? item.color.border : "#764ba2";
     const bg=item.color? item.color.bg : "#eef1f7";
     return `<div class="phenotype-item" style="border-color:${border};">
       <div class="phenotype-img" style="background:${bg};">${item.icon}</div>
-      <div>
-        <div class="phenotype-name">${item.label}</div>
-        <div class="phenotype-genos">Genótipos: ${Array.from(item.genotypes).sort().join(", ")}</div>
-      </div>
-      <div class="phenotype-count">${item.count}x</div>
+      <div class="phenotype-genos">${item.genotype}</div>
+      <div class="phenotype-name">${item.label}</div>
+      <div class="phenotype-position">L${item.row} C${item.col}</div>
     </div>`;
   }).join("");
 }
 function resetPhenotypePanel(trait){
-  state[trait.id].phenotypeCounts={};
+  state[trait.id].phenotypeItems=[];
   const list=document.getElementById("phenotypeList_"+trait.id);
   if(list){
     list.innerHTML='<div class="phenotype-empty">Monte o quadro para visualizar os fenótipos gerados.</div>';
@@ -834,7 +840,7 @@ function handleAlleleDrop(trait,r,c,side,value,tileId){
         cellEl.style.background = colorInfo.bg;
         cellEl.style.boxShadow = `0 2mm 3mm rgba(34,39,48,.20), 8px 8px 15px rgba(0,0,0,.16), -5px -5px 12px rgba(255,255,255,.92), inset 0 0 0 3px ${colorInfo.border}`;
       }
-      updatePhenotypePanel(trait,genotype,ph,colorInfo);
+      updatePhenotypePanel(trait,r,c,genotype,ph,colorInfo);
 
       // confete a cada combinação correta
       if(cellEl){
@@ -914,7 +920,10 @@ function updateProgress(){
   const studentOk = document.getElementById("studentSelect").value!=="" && document.getElementById("dataInput").value.trim()!=="";
   document.getElementById("submitBtn").disabled = !(squares===TOTAL_TRAITS && answered===TOTAL_QUESTIONS && studentOk);
 }
-function onAnswerChange(){ updateProgress(); }
+function markSelectedAnswers(){
+  document.querySelectorAll(".opt").forEach(opt=>opt.classList.toggle("checked", !!opt.querySelector("input:checked")));
+}
+function onAnswerChange(){ markSelectedAnswers(); updateProgress(); }
 
 /* =========================================================================
    7) SELEÇÃO DE ALUNO
