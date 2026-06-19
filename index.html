@@ -19,6 +19,8 @@
   .id-row select, .id-row input{padding:6px 8px;border:1px solid #bbb;border-radius:6px;font-size:.92rem;}
   #studentSelect{flex:1 1 100%;min-width:280px;}
   #turmaSelect{flex:0 0 140px;min-width:140px;}
+  #turmaSelect.turma-9oA{color:#c62828;font-weight:900;}
+  #turmaSelect.turma-9oB{color:#1b5e20;font-weight:900;}
   #emailInput{flex:1 1 260px;min-width:220px;background:#f4f6f9;color:#444;}
   .line{flex:1;border-bottom:1px solid #888;min-width:80px;height:22px;}
   .activity-title{text-align:center;font-weight:900;font-size:1.4rem;color:var(--purple);margin:18px 0 6px;text-transform:uppercase;}
@@ -947,15 +949,21 @@ STUDENTS.forEach(s=>grouped[s.t].push(s));
   grouped[turma].sort((a,b)=>a.n-b.n).forEach(s=>{
     const opt=document.createElement("option");
     opt.value=JSON.stringify(s);
-    opt.textContent=`${s.n} - ${s.name}`;
+    opt.textContent=s.name;
     og.appendChild(opt);
   });
   studentSelect.appendChild(og);
 });
+function styleTurmaField(turma){
+  turmaSelect.classList.remove("turma-9oA","turma-9oB");
+  if(turma==="9oA") turmaSelect.classList.add("turma-9oA");
+  if(turma==="9oB") turmaSelect.classList.add("turma-9oB");
+}
 studentSelect.addEventListener("change",()=>{
-  if(!studentSelect.value){ turmaSelect.value=""; numLine.textContent=""; emailInput.value=""; updateProgress(); return; }
+  if(!studentSelect.value){ turmaSelect.value=""; numLine.textContent=""; emailInput.value=""; styleTurmaField(""); updateProgress(); return; }
   const s=JSON.parse(studentSelect.value);
   turmaSelect.value=s.t;
+  styleTurmaField(s.t);
   numLine.textContent=s.n;
   emailInput.value=s.email||"";
   updateProgress();
