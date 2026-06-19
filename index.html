@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Atividade de Genética - 9º Ano</title>
+<style>
+  :root{
+    --purple:#764ba2; --purple-dark:#5a3780; --blue:#2980b9; --green:#27ae60; --red:#e74c3c; --orange:#f39c12;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f9;margin:0;padding:18px;color:#222;}
+  .sheet{max-width:980px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 4px 22px rgba(0,0,0,.12);padding:26px 30px 40px;}
+
+  /* CABEÇALHO ESCOLAR */
+  .school-header{text-align:center;font-weight:800;font-size:1.05rem;letter-spacing:.3px;margin-bottom:14px;text-transform:uppercase;color:#333;}
+  .id-fields{border:1px solid #999;border-radius:8px;padding:14px 18px;margin-bottom:10px;font-size:.95rem;}
+  .id-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:10px;align-items:center;}
+  .id-row label{font-weight:700;white-space:nowrap;}
+  .id-row select, .id-row input{padding:6px 8px;border:1px solid #bbb;border-radius:6px;font-size:.92rem;}
+  #studentSelect{flex:1 1 100%;min-width:280px;}
+  #turmaSelect{flex:0 0 140px;min-width:140px;}
+  #emailInput{flex:1 1 260px;min-width:220px;background:#f4f6f9;color:#444;}
+  .line{flex:1;border-bottom:1px solid #888;min-width:80px;height:22px;}
+  .activity-title{text-align:center;font-weight:900;font-size:1.4rem;color:var(--purple);margin:18px 0 6px;text-transform:uppercase;}
+  .activity-sub{text-align:center;color:#666;font-size:.85rem;margin-bottom:26px;}
+
+  .progress-bar{position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:2px solid #eee;z-index:50;margin-bottom:18px;}
+  .progress-track{height:10px;background:#eee;border-radius:6px;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--blue));width:0%;transition:width .3s;}
+  .progress-label{font-size:.75rem;color:#777;text-align:right;margin-top:3px;}
+
+  .law-banner{background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:10px 18px;border-radius:10px;font-weight:800;margin:30px 0 18px;font-size:1rem;}
+
+  .trait-card{border:1px solid #e2e2e2;border-radius:12px;padding:20px 22px;margin-bottom:24px;background:#fafbfd;}
+  .trait-title{font-size:1.05rem;font-weight:800;color:var(--purple-dark);margin-bottom:4px;}
+  .trait-desc{font-size:.85rem;color:#555;margin-bottom:14px;}
+  .parents-info{font-size:.82rem;background:#eef1fb;border-radius:8px;padding:8px 12px;margin-bottom:14px;display:inline-block;}
+
+  .punnett-wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px;}
+  .pools{display:flex;flex-direction:column;gap:14px;min-width:150px;}
+  .pool-box{border:2px dashed #bbb;border-radius:10px;padding:8px;background:#fff;}
+  .pool-label{font-size:.72rem;font-weight:700;color:#777;text-transform:uppercase;margin-bottom:6px;}
+  .pool-chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{
+    cursor:grab;user-select:none;padding:6px 12px;border-radius:8px;font-weight:800;font-size:.95rem;
+    background:var(--blue);color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);
+  }
+  .chip.gene2{background:var(--orange);}
+  .chip.placed{opacity:.25;cursor:default;}
+
+  .square-area{overflow-x:auto;}
+  table.punnett{border-collapse:collapse;}
+  table.punnett td, table.punnett th{border:2px solid #ccc;width:64px;height:54px;text-align:center;vertical-align:middle;font-size:.85rem;}
+  .corner{background:#f0f0f0;}
+  .dropzone{
+    background:#fff;border:2px dashed #999;border-radius:8px;min-width:46px;min-height:34px;
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--purple-dark);font-size:1rem;margin:0 auto;
+  }
+  .dropzone.filled{border-style:solid;border-color:var(--blue);background:#eaf3fb;}
+  .dropzone.over{border-color:var(--green);background:#eafaf0;}
+  .result-cell{font-size:1.4rem;line-height:1.1;}
+  .result-geno{display:block;font-size:.62rem;color:#666;font-weight:700;margin-top:2px;}
+  .cell-drop{width:100%;height:100%;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+  .allele-slots{display:flex;align-items:center;gap:4px;}
+  .plus-sign{font-weight:800;color:#999;font-size:.85rem;}
+  .allele-slot{
+    width:34px;height:30px;display:flex;align-items:center;justify-content:center;
+    border:2px dashed #ccc;border-radius:6px;font-weight:800;color:#aaa;font-size:.85rem;
+  }
+  .allele-slot.over{border-color:var(--green);background:#eafaf0;}
+  .allele-slot.filled{border-style:solid;border-color:var(--blue);background:#eaf3fb;color:var(--purple-dark);}
+  .allele-slot.wrong-flash{border-color:var(--red)!important;background:#fdecea!important;}
+  .cell-result{font-size:1.3rem;line-height:1.1;text-align:center;}
+  .combo-pool{margin-top:14px;}
+  .chip.allele-p1{background:var(--blue);}
+  .chip.allele-p2{background:var(--orange);}
+  .chip.allele-p1.placed,.chip.allele-p2.placed{opacity:.25;cursor:default;}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.78rem;margin:10px 0 4px;color:#444;}
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;}
+
+  .reset-btn{font-size:.72rem;background:#eee;border:1px solid #ccc;border-radius:6px;padding:4px 10px;cursor:pointer;margin-top:6px;}
+  .check-msg{font-size:.8rem;font-weight:700;margin-top:8px;}
+  .check-msg.ok{color:var(--green);}
+  .check-msg.pending{color:#999;}
+
+  .questions{margin-top:16px;border-top:1px dashed #ccc;padding-top:14px;}
+  .question{margin-bottom:14px;}
+  .qtext{font-weight:700;font-size:.9rem;margin-bottom:6px;}
+  .opts{display:flex;flex-direction:column;gap:5px;}
+  .opt{font-size:.86rem;display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;cursor:pointer;}
+  .opt:hover{background:#eef1fb;}
+  .opt input{cursor:pointer;}
+
+  .submit-area{text-align:center;margin-top:34px;}
+  #submitBtn{background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;font-weight:800;font-size:1.05rem;
+    border:none;border-radius:30px;padding:14px 40px;cursor:pointer;box-shadow:0 4px 14px rgba(118,75,162,.4);}
+  #submitBtn:disabled{opacity:.5;cursor:not-allowed;}
+  #statusMsg{margin-top:14px;font-size:.9rem;font-weight:700;}
+  #statusMsg.error{color:var(--red);}
+  #statusMsg.success{color:var(--green);}
+
+  .lock-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:none;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:var(--purple-dark);z-index:999;}
+</style>
+</head>
+<body>
+
+<div class="lock-overlay" id="lockOverlay">✅ Atividade enviada! Você já pode fechar esta aba.</div>
+
+<div class="sheet">
+  <div class="school-header">E.E. PROFª WANDA MASCAGNI DE SÁ</div>
+
+  <div class="id-fields">
+    <div class="id-row">
+      <label>NOME:</label>
+      <select id="studentSelect">
+        <option value="">-- selecione seu nome --</option>
+      </select>
+    </div>
+    <div class="id-row">
+      <label>SÉRIE:</label>
+      <select id="turmaSelect" disabled style="flex:0 0 140px;">
+        <option value="">--</option>
+        <option value="9oA">9º Ano A</option>
+        <option value="9oB">9º Ano B</option>
+      </select>
+      <label>Nº</label>
+      <div class="line" id="numLine" style="min-width:40px;flex:0 0 40px;"></div>
+      <label>DATA:</label>
+      <input type="text" id="dataInput" placeholder="__/__/____" style="flex:0 0 140px;">
+    </div>
+    <div class="id-row">
+      <label>E-MAIL:</label>
+      <input type="text" id="emailInput" readonly placeholder="(preenchido automaticamente ao selecionar o nome)">
+    </div>
+  </div>
+
+  <div class="activity-title">Atividade de Genética</div>
+  <div class="activity-sub">1ª e 2ª Leis de Mendel · Simuladores de Quadro de Punnett · Ciências · 9º Ano</div>
+
+  <div class="progress-bar">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 10 quadros completos · 0 / 30 questões respondidas</div>
+  </div>
+
+  <div id="traitsContainer"></div>
+
+  <div class="submit-area">
+    <button id="submitBtn" disabled>📩 Enviar atividade</button>
+    <div id="statusMsg"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   1) ALUNOS (9ºA e 9ºB)
+   ========================================================================= */
+const STUDENTS = [
+ {t:"9oA",n:1,name:"ALICE CARVALHO",email:"0000114160176XSP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:2,name:"AMANDA PASSOS DE ALMEIDA",email:"00001158648996SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:4,name:"ANA CLARA SOUSA DA COSTA",email:"00001237162300SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:5,name:"ANA JULIA MENEZES DA SILVA",email:"00001150798865SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:7,name:"ARTHUR COHEN BARRETO",email:"00001166518991SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:8,name:"ARTHUR DAVI DE SOUZA FERNANDES",email:"00001152878992SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:10,name:"EDUARDA ALVES DE SOUZA",email:"00001155073095SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:11,name:"EMANUEL ALVES OLIVEIRA",email:"00001129714135SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:12,name:"ESTHER CRISTINE SILVA RIBEIRO",email:"00001132160261SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:13,name:"EVELLYN ALVES DA SILVA",email:"00001214832842SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:14,name:"EVELLYN YASMIN TAVARES SILVA",email:"00001205709575SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:15,name:"FELIPE DE SOUZA RODRIGUES",email:"00001158794782SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:16,name:"FERNANDA POLACHINI MAYER GOMES MARQUES",email:"00001132201652SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:17,name:"GUSTAVO AUGUSTO TOMBOLO REIS",email:"00001214869646SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:18,name:"HENRIQUE ROCHA CARVALHAL",email:"00001255979288SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:19,name:"HINGRID SARAIVA DOS SANTOS",email:"00001153432778SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:20,name:"IGOR MARTINS PEREIRA",email:"00001150836155SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:21,name:"ISABELLA DOS SANTOS SALDANHA",email:"0000115076210XSP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:22,name:"KAUANNY APARECIDA MALAQUIAS LIMA",email:"0000115077275XSP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:23,name:"KÉTHILY NAYARA DA SILVA",email:"00001141600808SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:24,name:"LEONARDO DE AVELAR CARVALHO",email:"00001150774915SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:25,name:"LIVIA OLIVEIRA NASCIMENTO",email:"00001165282422SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:26,name:"LOHRAN ROMUALDO MENDES DA SILVA",email:"00001158854419SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:27,name:"LUANA KAROLINE MARTINS DE OLIVEIRA",email:"0000114150635XSP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:28,name:"LUIS MIGUEL GONCALVES DA SILVA",email:"00001238486459SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:29,name:"MANUELLA DE MORAES SOUZA",email:"00001141437387SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:30,name:"MARCELA ROBERTO DE OLIVEIRA",email:"00001150778155SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:34,name:"MELISSA VICTORIA DE OLIVEIRA CARVALHO",email:"00001158876282SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:35,name:"MIGUEL MARTINS DE ASSIS",email:"00001132211165SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:36,name:"OMRAN RASEKH",email:"00001246007174SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:37,name:"PATRICIA SEGURA",email:"00001150774654SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:39,name:"RAUL HENRIQUE CRUS BAPTISTA",email:"0000114169380XSP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:40,name:"SARAH VITORIA ALVES OLIVEIRA",email:"00001150772438SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:41,name:"YURI GABRIEL DE MORAES PONGOLINO",email:"00001150772396SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:42,name:"ZAYN AL ABIDIN RASULI",email:"0000125460635XSP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:43,name:"MATHEUS TURCHETTO",email:"00001132109668SP@al.educacao.sp.gov.br"},
+ {t:"9oA",n:44,name:"LARISSA RIBEIRO DO NASCIMENTO",email:"00001140691491SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:1,name:"ALEJANDRO VIEIRA LIMA",email:"00001239445593SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:2,name:"ALLAN BEZERRA DE LIMA",email:"00001150817495SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:3,name:"ANA BEATRIZ RODRIGUES OLIVEIRA",email:"00001150770028SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:4,name:"ANA CLARA GONCALVES TORRES LOYOLA",email:"00001141508643SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:5,name:"ANNA BEATRIZ SANTIAGO DA SILVA",email:"00001141438872SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:8,name:"CHRISTOFER FELIPY SANTOS FONSECA",email:"00001150798920SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:9,name:"ELIAS SILVA DE LIMA",email:"00001132191567SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:10,name:"EVERTON HENRIQUE CARMO RODRIGUES",email:"00001150798877SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:11,name:"FABIO HENRIQUE DA SILVA",email:"00001150833610SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:13,name:"GABRIELA VITORIA SEVERA LINS",email:"00001132153384SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:16,name:"JENNYFER VITORIA BASILIO GOMES",email:"00001141504467SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:17,name:"JULIO CESAR ALVES DOS SANTOS",email:"00001158831821SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:19,name:"LEONARDO MENOIA",email:"00001132223982SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:20,name:"LORENA ALEXANDRE SANTOS DA SILVA",email:"00001125266181SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:21,name:"LUAN VENITES BALBINO",email:"00001165284960SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:23,name:"MARIA EDUARDA FELIX DA SILVA",email:"00001165166963SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:24,name:"MUNIQUE CRISTINA LUCAS",email:"00001150772293SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:25,name:"NICOLAS PENTEADO",email:"0000121492136XSP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:26,name:"NICOLY VITORIA SANTOS DE MENEZES",email:"00001141517516SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:27,name:"PAULO CELSO DA COSTA JUNIOR",email:"00001165191337SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:29,name:"PEDRO HENRIQUE CARLOS LIMA",email:"00001130321733SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:30,name:"PEDRO HENRIQUE MORAIS AMORIM",email:"00001141647242SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:31,name:"PEDRO HENRIQUE OLIVEIRA GOMES",email:"00001141679231SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:32,name:"PIETRO RODRIGUES MIRANDA",email:"00001141610231SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:33,name:"RAPHAELLY APARECIDA MARINHO DE OLIVEIRA",email:"00001158897273SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:35,name:"RENAN LEANDRO RODRIGUES VICENTE",email:"00001158899269SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:36,name:"RENATO SOUZA SANTOS",email:"00001150796650SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:37,name:"RODOLFO RAFAEL GOLZENLEUCHTER MORENO JUNIOR",email:"00001125875379SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:38,name:"SOPHIA MENEZES DE ARAUJO",email:"00001150749131SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:40,name:"THAYNA SEABRA DE OLIVEIRA DO NASCIMENTO",email:"00001150795700SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:41,name:"VITORIA MENEZES BRANDAO",email:"00001142555069SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:42,name:"WENDELL RAFAEL DE JESUS LESSA",email:"00001141637820SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:43,name:"WILHAN KENJI ANTONIO",email:"00001214900756SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:44,name:"ALYSON DANIEL OLIVEIRA HERCULE",email:"00001141512865SP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:46,name:"CAIO FELIPE NOGUEIRA DOS SANTOS",email:"0000114799576XSP@al.educacao.sp.gov.br"},
+ {t:"9oB",n:47,name:"YASMIN TAIRA DE OLIVEIRA",email:""}
+];
+
+/* =========================================================================
+   2) TRAITS — 5 de 1ª Lei (monoibridismo) + 5 de 2ª Lei (di-hibridismo)
+   ========================================================================= */
+const TRAITS = [
+{id:"t1",law:1,title:"1. Cor da flor da ervilha (Pisum sativum)",
+ desc:"Cruzamento de duas plantas heterozigotas para a cor da flor.",
+ parent1:"Bb",parent2:"Bb",
+ genes:[{dom:"B",rec:"b",domLabel:"Púrpura",recLabel:"Branca",domIcon:"🟣",recIcon:"⚪"}]},
+
+{id:"t2",law:1,title:"2. Cor da semente da ervilha",
+ desc:"Cruzamento de duas plantas heterozigotas para a cor da semente.",
+ parent1:"Vv",parent2:"Vv",
+ genes:[{dom:"V",rec:"v",domLabel:"Amarela",recLabel:"Verde",domIcon:"🟡",recIcon:"🟢"}]},
+
+{id:"t3",law:1,title:"3. Textura da semente da ervilha",
+ desc:"Cruzamento de duas plantas heterozigotas para a textura da semente.",
+ parent1:"Ll",parent2:"Ll",
+ genes:[{dom:"L",rec:"l",domLabel:"Lisa",recLabel:"Rugosa",domIcon:"⚪",recIcon:"🌰"}]},
+
+{id:"t4",law:1,title:"4. Pigmentação da pele em humanos (Albinismo)",
+ desc:"Cruzamento de dois indivíduos heterozigotos (portadores) para albinismo.",
+ parent1:"Aa",parent2:"Aa",
+ genes:[{dom:"A",rec:"a",domLabel:"Pigmentação normal",recLabel:"Albinismo",domIcon:"🧑🏽",recIcon:"🧑🏻"}]},
+
+{id:"t5",law:1,title:"5. Polidactilia em humanos",
+ desc:"Cruzamento de dois indivíduos heterozigotos para a condição (dedos extras é dominante).",
+ parent1:"Dd",parent2:"Dd",
+ genes:[{dom:"D",rec:"d",domLabel:"Polidactilia (dedo extra)",recLabel:"Mão normal",domIcon:"🖐️➕",recIcon:"🖐️"}]},
+
+{id:"t6",law:2,title:"6. Cor + textura da semente da ervilha (di-hibridismo clássico de Mendel)",
+ desc:"Cruzamento de duas plantas duplo-heterozigotas (VvLl × VvLl).",
+ parent1:"VvLl",parent2:"VvLl",
+ genes:[
+   {dom:"V",rec:"v",domLabel:"Amarela",recLabel:"Verde",domIcon:"🟡",recIcon:"🟢"},
+   {dom:"L",rec:"l",domLabel:"Lisa",recLabel:"Rugosa",domIcon:"⬤",recIcon:"✺"}
+ ]},
+
+{id:"t7",law:2,title:"7. Cor e comprimento do pelo em cobaias",
+ desc:"Cruzamento de duas cobaias duplo-heterozigotas (PpCc × PpCc).",
+ parent1:"PpCc",parent2:"PpCc",
+ genes:[
+   {dom:"P",rec:"p",domLabel:"Pelo preto",recLabel:"Pelo branco",domIcon:"⬛",recIcon:"⬜"},
+   {dom:"C",rec:"c",domLabel:"Pelo curto",recLabel:"Pelo longo",domIcon:"🐹",recIcon:"🐾"}
+ ]},
+
+{id:"t8",law:2,title:"8. Cor dos olhos e tipo de lóbulo da orelha em humanos",
+ desc:"Cruzamento de dois indivíduos duplo-heterozigotos (MmSs × MmSs).",
+ parent1:"MmSs",parent2:"MmSs",
+ genes:[
+   {dom:"M",rec:"m",domLabel:"Olhos castanhos",recLabel:"Olhos azuis",domIcon:"🟤",recIcon:"🔵"},
+   {dom:"S",rec:"s",domLabel:"Lóbulo solto",recLabel:"Lóbulo aderente",domIcon:"👂",recIcon:"👂🔗"}
+ ]},
+
+{id:"t9",law:2,title:"9. Cor e formato da vagem da ervilha",
+ desc:"Cruzamento de duas plantas duplo-heterozigotas (CcFf × CcFf).",
+ parent1:"CcFf",parent2:"CcFf",
+ genes:[
+   {dom:"C",rec:"c",domLabel:"Vagem verde",recLabel:"Vagem amarela",domIcon:"🟢",recIcon:"🟡"},
+   {dom:"F",rec:"f",domLabel:"Vagem inflada",recLabel:"Vagem constrita",domIcon:"🫛",recIcon:"➰"}
+ ]},
+
+{id:"t10",law:2,title:"10. Tipo de cabelo e presença de sardas em humanos",
+ desc:"Cruzamento de dois indivíduos duplo-heterozigotos (RrSs × RrSs).",
+ parent1:"RrSs",parent2:"RrSs",
+ genes:[
+   {dom:"R",rec:"r",domLabel:"Cabelo crespo",recLabel:"Cabelo liso",domIcon:"🦱",recIcon:"💇"},
+   {dom:"S",rec:"s",domLabel:"Com sardas",recLabel:"Sem sardas",domIcon:"🟤🟤",recIcon:"😶"}
+ ]}
+];
+
+/* =========================================================================
+   3) QUESTÕES — 3 por traço (30 no total)
+   Formato: {text, options:[A,B,C,D], correct:"A"/"B"/"C"/"D"}
+   ========================================================================= */
+const QUESTIONS = {
+t1:[
+ {text:"Qual a proporção fenotípica esperada na geração F1 desse cruzamento (Bb × Bb)?",
+  options:["1 púrpura : 1 branca","3 púrpura : 1 branca","1 púrpura : 3 branca","Todas púrpuras"],correct:"B"},
+ {text:"Qual genótipo representa uma planta de flor branca?",
+  options:["BB","Bb","bb","BbBb"],correct:"C"},
+ {text:"Esse cruzamento exemplifica qual conceito da 1ª Lei de Mendel?",
+  options:["Segregação independente de dois genes","Ligação gênica","Segregação de um par de alelos (monoibridismo)","Codominância"],correct:"C"}
+],
+t2:[
+ {text:"No cruzamento Vv × Vv, qual fração dos descendentes terá semente verde?",
+  options:["1/4","1/2","3/4","Todos"],correct:"A"},
+ {text:"O genótipo VV representa um indivíduo:",
+  options:["Heterozigoto","Homozigoto dominante","Homozigoto recessivo","Híbrido"],correct:"B"},
+ {text:"Por que a cor verde só aparece quando os dois alelos são 'v'?",
+  options:["Porque v é dominante","Porque v é recessivo e só se manifesta em homozigose","Porque V é letal","Porque não há relação entre genótipo e fenótipo"],correct:"B"}
+],
+t3:[
+ {text:"No cruzamento Ll × Ll, qual a proporção esperada de semente rugosa?",
+  options:["1/4","1/2","3/4","0"],correct:"A"},
+ {text:"Um indivíduo Ll é chamado de:",
+  options:["Homozigoto dominante","Homozigoto recessivo","Heterozigoto","Mutante"],correct:"C"},
+ {text:"Se cruzarmos LL × ll, qual será o fenótipo de toda a geração F1?",
+  options:["Todos lisos","Todos rugosos","50% lisos e 50% rugosos","Metade estéril"],correct:"A"}
+],
+t4:[
+ {text:"Dois pais portadores (Aa × Aa) têm um filho. Qual a probabilidade de ele ser albino?",
+  options:["0%","25%","50%","75%"],correct:"B"},
+ {text:"Por que dois pais com pigmentação normal podem ter um filho albino?",
+  options:["Porque ambos são homozigotos dominantes","Porque ambos são heterozigotos (portadores) e o filho recebeu 'a' de cada um","Porque houve mutação espontânea obrigatória","Isso é impossível geneticamente"],correct:"B"},
+ {text:"O alelo causador do albinismo, nesse exemplo, é:",
+  options:["Dominante","Recessivo","Codominante","Ligado ao sexo"],correct:"B"}
+],
+t5:[
+ {text:"No cruzamento Dd × Dd, qual a proporção esperada de filhos com mão normal?",
+  options:["1/4","1/2","3/4","1"],correct:"A"},
+ {text:"Um indivíduo com genótipo dd terá:",
+  options:["Polidactilia","Mão normal","Mãos com tamanhos diferentes","Não é possível saber"],correct:"B"},
+ {text:"Esse exemplo mostra que uma característica considerada 'anormal' (dedo extra) pode ser geneticamente:",
+  options:["Sempre recessiva","Dominante","Inexistente em humanos","Causada apenas pelo ambiente"],correct:"B"}
+],
+t6:[
+ {text:"No cruzamento VvLl × VvLl, qual a proporção fenotípica clássica esperada em F2?",
+  options:["9:3:3:1","3:1","1:1:1:1","1:2:1"],correct:"A"},
+ {text:"Qual genótipo abaixo produz o fenótipo 'semente verde e rugosa'?",
+  options:["VvLl","VVLL","vvll","VvLL"],correct:"C"},
+ {text:"Esse cruzamento ilustra principalmente:",
+  options:["A 1ª Lei de Mendel (segregação)","A 2ª Lei de Mendel (segregação independente de genes em cromossomos diferentes)","Herança ligada ao sexo","Mutação gênica"],correct:"B"}
+],
+t7:[
+ {text:"Quantos tipos de gametas uma cobaia PpCc pode produzir, considerando os dois genes?",
+  options:["2","4","8","16"],correct:"B"},
+ {text:"Qual fenótipo corresponde ao genótipo ppCc?",
+  options:["Pelo preto e curto","Pelo branco e curto","Pelo preto e longo","Pelo branco e longo"],correct:"B"},
+ {text:"Para que os genes de cor e comprimento do pelo se segreguem de forma independente, eles devem estar:",
+  options:["No mesmo cromossomo, próximos","Em cromossomos diferentes (ou distantes no mesmo cromossomo)","No cromossomo sexual","Ausentes no genoma"],correct:"B"}
+],
+t8:[
+ {text:"No cruzamento MmSs × MmSs, qual a chance de um filho ter olhos azuis E lóbulo aderente (mmss)?",
+  options:["1/16","1/4","9/16","1/2"],correct:"A"},
+ {text:"Um indivíduo MmSs é, em relação aos dois genes:",
+  options:["Duplo-homozigoto","Duplo-heterozigoto","Hemizigoto","Aneuploide"],correct:"B"},
+ {text:"A proporção 9:3:3:1 esperada nesse cruzamento di-híbrido reflete:",
+  options:["Ligação completa entre os genes","Segregação independente de dois pares de alelos","Ausência de dominância","Herança citoplasmática"],correct:"B"}
+],
+t9:[
+ {text:"Qual genótipo representa uma vagem amarela e constrita?",
+  options:["CcFf","ccff","CCFF","CcFF"],correct:"B"},
+ {text:"No cruzamento CcFf × CcFf, qual fração da progênie deve ser verde e inflada (fenótipo duplo-dominante)?",
+  options:["1/16","3/16","9/16","1/4"],correct:"C"},
+ {text:"Os genes para cor e formato da vagem segregam de forma independente porque:",
+  options:["Estão no mesmo cromossomo sempre ligados","Estão localizados em cromossomos diferentes","Não existem em ervilhas","Um depende do outro para se expressar"],correct:"B"}
+],
+t10:[
+ {text:"Qual a probabilidade de um filho do cruzamento RrSs × RrSs ter cabelo liso e sem sardas (rrss)?",
+  options:["1/16","1/4","9/16","1/2"],correct:"A"},
+ {text:"Um indivíduo RrSs apresenta qual fenótipo?",
+  options:["Cabelo liso, sem sardas","Cabelo crespo, com sardas","Cabelo crespo, sem sardas","Calvície"],correct:"B"},
+ {text:"A proporção 9:3:3:1 observada nesse cruzamento é a base experimental da:",
+  options:["1ª Lei de Mendel","2ª Lei de Mendel (Lei da Segregação Independente)","Lei de Hardy-Weinberg","Teoria cromossômica do sexo"],correct:"B"}
+]
+};
+
+/* =========================================================================
+   4) MOTOR GENÉTICO — gametas, cruzamento, fenótipo
+   ========================================================================= */
+function getGenes(genotype, traitGenes){
+  // genotype ex: "VvLl" -> pares ["Vv","Ll"]
+  const pairs=[];
+  for(let i=0;i<genotype.length;i+=2) pairs.push(genotype.substr(i,2));
+  return pairs;
+}
+function getGametes(genotype){
+  const pairs=getGenes(genotype);
+  let combos=[""];
+  pairs.forEach(pair=>{
+    const alleles=[pair[0],pair[1]];
+    const next=[];
+    combos.forEach(c=>alleles.forEach(a=>next.push(c+a)));
+    combos=next;
+  });
+  return combos; // ex: ["VL","Vl","vL","vl"]
+}
+function combineGenotype(gamete1,gamete2,traitGenes){
+  // cada gamete tem 1 letra por gene, na mesma ordem dos genes do trait
+  let result="";
+  for(let g=0;g<traitGenes.length;g++){
+    const a1=gamete1[g], a2=gamete2[g];
+    const dom=traitGenes[g].dom;
+    // dominante primeiro na escrita
+    if(a1===dom || a2===dom){
+      result += (a1===dom?a1:a2) + (a1===dom?a2:a1);
+    } else {
+      result += a1+a2;
+    }
+  }
+  return result;
+}
+function phenotypeOf(genotype,traitGenes){
+  let icon="", label="";
+  for(let g=0;g<traitGenes.length;g++){
+    const pairChars=genotype.substr(g*2,2);
+    const hasDom = pairChars.indexOf(traitGenes[g].dom) !== -1;
+    icon += hasDom? traitGenes[g].domIcon : traitGenes[g].recIcon;
+    label += (hasDom? traitGenes[g].domLabel : traitGenes[g].recLabel) + (g<traitGenes.length-1? " + ":"");
+  }
+  return {icon,label};
+}
+
+/* =========================================================================
+   5) RENDERIZAÇÃO DOS SIMULADORES
+   ========================================================================= */
+const container=document.getElementById("traitsContainer");
+const state={}; // state[traitId] = {p1Slots:[], p2Slots:[], completed:false}
+
+TRAITS.forEach(trait=>{
+  const gametes1=getGametes(trait.parent1);
+  const gametes2=getGametes(trait.parent2);
+  const n=gametes1.length; // 2 ou 4
+
+  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}};
+
+  if(trait.law===6 || trait.id==="t6"){ /* banner inserted separately below */ }
+
+  const card=document.createElement("div");
+  card.className="trait-card";
+  card.id="card_"+trait.id;
+
+  // legenda
+  const legendHtml = trait.genes.map(g=>
+    `<span><span class="swatch" style="background:#eee;"></span>${g.domIcon} ${g.domLabel} (dominante: ${g.dom}) &nbsp;|&nbsp; ${g.recIcon} ${g.recLabel} (recessivo: ${g.rec})</span>`
+  ).join("<br>");
+
+  card.innerHTML = `
+    <div class="trait-title">${trait.title}</div>
+    <div class="trait-desc">${trait.desc}</div>
+    <div class="parents-info">👨 Genitor 1: <b>${trait.parent1}</b> &nbsp;&nbsp; 👩 Genitor 2: <b>${trait.parent2}</b></div>
+    <div class="legend">${legendHtml}</div>
+    <div class="punnett-wrap">
+      <div class="pools">
+        <div class="pool-box">
+          <div class="pool-label">Gametas do Genitor 1 (arraste)</div>
+          <div class="pool-chips" id="pool1_${trait.id}"></div>
+        </div>
+        <div class="pool-box">
+          <div class="pool-label">Gametas do Genitor 2 (arraste)</div>
+          <div class="pool-chips" id="pool2_${trait.id}"></div>
+        </div>
+        <button class="reset-btn" id="reset_${trait.id}">↺ Reiniciar quadro</button>
+        <div class="check-msg pending" id="msg_${trait.id}">Arraste os gametas para montar o quadro de Punnett.</div>
+      </div>
+      <div class="square-area">
+        <table class="punnett" id="table_${trait.id}"></table>
+        <div class="combo-pool" id="combopool_${trait.id}" style="display:none;">
+          <div class="pool-label" style="margin-top:10px;">👨 Alelos do Genitor 1 (arraste para o lado esquerdo da célula)</div>
+          <div class="pool-chips" id="comboChipsP1_${trait.id}"></div>
+          <div class="pool-label" style="margin-top:10px;">👩 Alelos do Genitor 2 (arraste para o lado direito da célula)</div>
+          <div class="pool-chips" id="comboChipsP2_${trait.id}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="questions" id="questions_${trait.id}"></div>
+  `;
+  container.appendChild(card);
+
+  // monta tabela: linha 0 = header col (genitor1), coluna 0 = header row (genitor2)
+  const table=card.querySelector("#table_"+trait.id);
+  let headRow=document.createElement("tr");
+  headRow.appendChild(makeTh("corner","×"));
+  for(let c=0;c<n;c++){
+    const th=document.createElement("th");
+    th.appendChild(makeDropzone(trait.id,"col",c));
+    headRow.appendChild(th);
+  }
+  table.appendChild(headRow);
+
+  for(let r=0;r<n;r++){
+    const tr=document.createElement("tr");
+    const th=document.createElement("th");
+    th.appendChild(makeDropzone(trait.id,"row",r));
+    tr.appendChild(th);
+    for(let c=0;c<n;c++){
+      const td=document.createElement("td");
+      td.id=`cell_${trait.id}_${r}_${c}`;
+      td.dataset.r=r; td.dataset.c=c; td.dataset.trait=trait.id;
+      td.innerHTML=`
+        <div class="cell-drop" id="celldrop_${trait.id}_${r}_${c}">
+          <div class="allele-slots">
+            <div class="allele-slot" id="slotp1_${trait.id}_${r}_${c}" data-side="p1">?</div>
+            <span class="plus-sign">+</span>
+            <div class="allele-slot" id="slotp2_${trait.id}_${r}_${c}" data-side="p2">?</div>
+          </div>
+          <div class="cell-result" id="cellresult_${trait.id}_${r}_${c}"></div>
+        </div>`;
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+  }
+  // listeners de drop nos dois slots de cada célula (alelo do genitor 1 e do genitor 2)
+  for(let r=0;r<n;r++){
+    for(let c=0;c<n;c++){
+      [["p1",`#slotp1_${trait.id}_${r}_${c}`],["p2",`#slotp2_${trait.id}_${r}_${c}`]].forEach(([side,sel])=>{
+        const slot=card.querySelector(sel);
+        slot.addEventListener("dragover",e=>{e.preventDefault(); slot.classList.add("over");});
+        slot.addEventListener("dragleave",()=>slot.classList.remove("over"));
+        slot.addEventListener("drop",e=>{
+          e.preventDefault(); slot.classList.remove("over");
+          const data=JSON.parse(e.dataTransfer.getData("text/plain"));
+          if(data.kind!=="allele" || data.traitId!==trait.id || data.side!==side) return;
+          handleAlleleDrop(trait,r,c,side,data.value,data.tileId);
+        });
+      });
+    }
+  }
+
+  // pools de chips
+  const pool1=card.querySelector("#pool1_"+trait.id);
+  const pool2=card.querySelector("#pool2_"+trait.id);
+  gametes1.forEach((g,idx)=>pool1.appendChild(makeChip(trait.id,"col",g,idx)));
+  gametes2.forEach((g,idx)=>pool2.appendChild(makeChip(trait.id,"row",g,idx)));
+
+  card.querySelector("#reset_"+trait.id).addEventListener("click",()=>resetTrait(trait));
+
+  // questões
+  const qContainer=card.querySelector("#questions_"+trait.id);
+  QUESTIONS[trait.id].forEach((q,qi)=>{
+    const qDiv=document.createElement("div");
+    qDiv.className="question";
+    const letters=["A","B","C","D"];
+    qDiv.innerHTML = `<div class="qtext">${qi+1}) ${q.text}</div>
+      <div class="opts">
+        ${q.options.map((opt,oi)=>`
+          <label class="opt">
+            <input type="radio" name="${trait.id}_q${qi+1}" value="${letters[oi]}" onchange="onAnswerChange()">
+            <span>${letters[oi]}) ${opt}</span>
+          </label>`).join("")}
+      </div>`;
+    qContainer.appendChild(qDiv);
+  });
+});
+
+function makeTh(cls,text){
+  const th=document.createElement("th");
+  th.className=cls; th.textContent=text;
+  return th;
+}
+function makeDropzone(traitId,kind,idx){
+  const dz=document.createElement("div");
+  dz.className="dropzone";
+  dz.id=`drop_${traitId}_${kind}_${idx}`;
+  dz.dataset.trait=traitId; dz.dataset.kind=kind; dz.dataset.idx=idx;
+  dz.textContent="?";
+  dz.addEventListener("dragover",e=>{e.preventDefault(); dz.classList.add("over");});
+  dz.addEventListener("dragleave",()=>dz.classList.remove("over"));
+  dz.addEventListener("drop",e=>{
+    e.preventDefault(); dz.classList.remove("over");
+    const data=JSON.parse(e.dataTransfer.getData("text/plain"));
+    if(data.traitId!==traitId || data.kind!==kind) return;
+    placeChip(traitId,kind,idx,data.gamete,data.chipId);
+  });
+  return dz;
+}
+function makeChip(traitId,kind,gamete,idx){
+  const chip=document.createElement("div");
+  chip.className="chip"+(gamete.length>1 && /[a-z]/i.test(gamete[1])? " gene2":"");
+  chip.textContent=gamete;
+  chip.draggable=true;
+  chip.id=`chip_${traitId}_${kind}_${idx}`;
+  chip.dataset.gamete=gamete;
+  chip.addEventListener("dragstart",e=>{
+    e.dataTransfer.setData("text/plain",JSON.stringify({traitId,kind,gamete,chipId:chip.id}));
+  });
+  return chip;
+}
+function placeChip(traitId,kind,idx,gamete,chipId){
+  const trait=TRAITS.find(t=>t.id===traitId);
+  const slotsArr = kind==="col"? state[traitId].p1Slots : state[traitId].p2Slots;
+  slotsArr[idx]=gamete;
+  const dz=document.getElementById(`drop_${traitId}_${kind}_${idx}`);
+  dz.textContent=gamete;
+  dz.classList.add("filled");
+  const chipEl=document.getElementById(chipId);
+  if(chipEl) chipEl.classList.add("placed");
+  maybeComplete(trait);
+}
+function maybeComplete(trait){
+  const st=state[trait.id];
+  if(st.p1Slots.every(x=>x!==null) && st.p2Slots.every(x=>x!==null) && !st.poolRevealed){
+    revealCombinationPool(trait);
+  }
+}
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function revealCombinationPool(trait){
+  const st=state[trait.id];
+  const n=st.p1Slots.length;
+  st.poolRevealed=true;
+  st.filledCells=0;
+  st.expectedP1={}; // "r_c" -> alelo/gameta esperado do genitor 1 (coluna)
+  st.expectedP2={}; // "r_c" -> alelo/gameta esperado do genitor 2 (linha)
+
+  const tilesP1=[], tilesP2=[];
+  for(let r=0;r<n;r++){
+    for(let c=0;c<n;c++){
+      st.expectedP1[r+"_"+c]=st.p1Slots[c];
+      st.expectedP2[r+"_"+c]=st.p2Slots[r];
+      tilesP1.push(st.p1Slots[c]);
+      tilesP2.push(st.p2Slots[r]);
+    }
+  }
+
+  const poolBox=document.getElementById("combopool_"+trait.id);
+  const chipsP1=document.getElementById("comboChipsP1_"+trait.id);
+  const chipsP2=document.getElementById("comboChipsP2_"+trait.id);
+  chipsP1.innerHTML=""; chipsP2.innerHTML="";
+
+  shuffle(tilesP1).forEach((value,idx)=>{
+    const chip=makeAlleleTile(trait.id,"p1",value,idx);
+    chipsP1.appendChild(chip);
+  });
+  shuffle(tilesP2).forEach((value,idx)=>{
+    const chip=makeAlleleTile(trait.id,"p2",value,idx);
+    chipsP2.appendChild(chip);
+  });
+
+  poolBox.style.display="block";
+
+  const msg=document.getElementById("msg_"+trait.id);
+  msg.textContent="Agora arraste o alelo do Genitor 1 e o alelo do Genitor 2 para os dois espaços de cada célula, formando o genótipo.";
+  msg.classList.remove("ok"); msg.classList.add("pending");
+  updateProgress();
+}
+function makeAlleleTile(traitId,side,value,idx){
+  const chip=document.createElement("div");
+  chip.className="chip allele-"+side;
+  chip.textContent=value;
+  chip.draggable=true;
+  chip.id=`alleletile_${traitId}_${side}_${idx}`;
+  chip.dataset.value=value;
+  chip.addEventListener("dragstart",e=>{
+    e.dataTransfer.setData("text/plain",JSON.stringify({kind:"allele",traitId,side,value,tileId:chip.id}));
+  });
+  return chip;
+}
+function handleAlleleDrop(trait,r,c,side,value,tileId){
+  const st=state[trait.id];
+  const key=r+"_"+c;
+  const slot=document.getElementById(`slot${side}_${trait.id}_${r}_${c}`);
+  if(slot.classList.contains("filled")) return; // já preenchido
+
+  const expected = side==="p1" ? st.expectedP1[key] : st.expectedP2[key];
+  if(value===expected){
+    slot.textContent=value;
+    slot.classList.add("filled");
+    const tile=document.getElementById(tileId);
+    if(tile) tile.remove();
+
+    const otherSide = side==="p1" ? "p2" : "p1";
+    const otherSlot=document.getElementById(`slot${otherSide}_${trait.id}_${r}_${c}`);
+    if(otherSlot.classList.contains("filled")){
+      const p1Val = side==="p1" ? value : otherSlot.textContent;
+      const p2Val = side==="p2" ? value : otherSlot.textContent;
+      const genotype=combineGenotype(p1Val,p2Val,trait.genes);
+      const ph=phenotypeOf(genotype,trait.genes);
+      const resultEl=document.getElementById(`cellresult_${trait.id}_${r}_${c}`);
+      resultEl.innerHTML=`<div class="result-cell">${ph.icon}</div><span class="result-geno">${genotype}</span>`;
+      st.filledCells++;
+      if(st.filledCells>=st.p1Slots.length*st.p2Slots.length){
+        markTraitComplete(trait);
+      }
+    }
+    updateProgress();
+  } else {
+    slot.classList.add("wrong-flash");
+    setTimeout(()=>slot.classList.remove("wrong-flash"),500);
+  }
+}
+function markTraitComplete(trait){
+  state[trait.id].completed=true;
+  const msg=document.getElementById("msg_"+trait.id);
+  msg.textContent="✅ Quadro de Punnett completo! Observe os fenótipos gerados e responda às questões abaixo.";
+  msg.classList.remove("pending"); msg.classList.add("ok");
+  updateProgress();
+}
+function resetTrait(trait){
+  state[trait.id].p1Slots.fill(null);
+  state[trait.id].p2Slots.fill(null);
+  state[trait.id].completed=false;
+  state[trait.id].poolRevealed=false;
+  state[trait.id].filledCells=0;
+  state[trait.id].expectedP1={};
+  state[trait.id].expectedP2={};
+  document.querySelectorAll(`[id^="drop_${trait.id}_"]`).forEach(dz=>{dz.textContent="?";dz.classList.remove("filled");});
+  document.querySelectorAll(`[id^="slotp1_${trait.id}_"], [id^="slotp2_${trait.id}_"]`).forEach(s=>{s.textContent="?";s.classList.remove("filled","wrong-flash");});
+  document.querySelectorAll(`[id^="cellresult_${trait.id}_"]`).forEach(c=>c.innerHTML="");
+  document.querySelectorAll(`[id^="chip_${trait.id}_"]`).forEach(c=>c.classList.remove("placed"));
+  const poolBox=document.getElementById("combopool_"+trait.id);
+  poolBox.style.display="none";
+  document.getElementById("comboChipsP1_"+trait.id).innerHTML="";
+  document.getElementById("comboChipsP2_"+trait.id).innerHTML="";
+  const msg=document.getElementById("msg_"+trait.id);
+  msg.textContent="Arraste os gametas para montar o quadro de Punnett."; msg.className="check-msg pending";
+  updateProgress();
+}
+
+/* =========================================================================
+   6) PROGRESSO / VALIDAÇÃO GLOBAL
+   ========================================================================= */
+function countAnsweredQuestions(){
+  let count=0;
+  TRAITS.forEach(t=>{
+    for(let qi=1;qi<=3;qi++){
+      if(document.querySelector(`input[name="${t.id}_q${qi}"]:checked`)) count++;
+    }
+  });
+  return count;
+}
+function countCompletedSquares(){
+  return TRAITS.filter(t=>state[t.id].completed).length;
+}
+function updateProgress(){
+  const squares=countCompletedSquares();
+  const answered=countAnsweredQuestions();
+  const pct=Math.round(((squares/10)*50)+((answered/30)*50));
+  document.getElementById("progressFill").style.width=pct+"%";
+  document.getElementById("progressLabel").textContent=`${squares} / 10 quadros completos · ${answered} / 30 questões respondidas`;
+  const studentOk = document.getElementById("studentSelect").value!=="" && document.getElementById("dataInput").value.trim()!=="";
+  document.getElementById("submitBtn").disabled = !(squares===10 && answered===30 && studentOk);
+}
+function onAnswerChange(){ updateProgress(); }
+
+/* =========================================================================
+   7) SELEÇÃO DE ALUNO
+   ========================================================================= */
+const studentSelect=document.getElementById("studentSelect");
+const turmaSelect=document.getElementById("turmaSelect");
+const numLine=document.getElementById("numLine");
+const emailInput=document.getElementById("emailInput");
+
+const grouped={"9oA":[],"9oB":[]};
+STUDENTS.forEach(s=>grouped[s.t].push(s));
+["9oA","9oB"].forEach(turma=>{
+  const og=document.createElement("optgroup");
+  og.label = turma==="9oA"? "9º Ano A":"9º Ano B";
+  grouped[turma].sort((a,b)=>a.n-b.n).forEach(s=>{
+    const opt=document.createElement("option");
+    opt.value=JSON.stringify(s);
+    opt.textContent=`${s.n} - ${s.name}`;
+    og.appendChild(opt);
+  });
+  studentSelect.appendChild(og);
+});
+studentSelect.addEventListener("change",()=>{
+  if(!studentSelect.value){ turmaSelect.value=""; numLine.textContent=""; emailInput.value=""; updateProgress(); return; }
+  const s=JSON.parse(studentSelect.value);
+  turmaSelect.value=s.t;
+  numLine.textContent=s.n;
+  emailInput.value=s.email||"";
+  updateProgress();
+});
+document.getElementById("dataInput").addEventListener("input",updateProgress);
+
+/* =========================================================================
+   8) ENVIO (JSONP + base64) — padrão Apps Script existente
+   ========================================================================= */
+const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbyku30cGOaPoeeDM2JDUbH4-5giJzeKMVzC61EIGgGwUyP4VxNkJuiP-r-bZdt32ZNV/exec";
+let switchCount=0;
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) switchCount++; });
+
+function utf8ToBase64(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+document.getElementById("submitBtn").addEventListener("click",()=>{
+  const studentRaw=studentSelect.value;
+  if(!studentRaw){ showStatus("Selecione seu nome antes de enviar.",true); return; }
+  const s=JSON.parse(studentRaw);
+  const data=document.getElementById("dataInput").value.trim();
+
+  const payload={
+    school:"WMS9GEN",
+    sheetName:s.t,
+    studentName:s.name,
+    studentNumber:s.n,
+    studentGrade: s.t==="9oA"?"9º Ano A":"9º Ano B",
+    studentEmail:s.email,
+    date:data,
+    switchCount:switchCount
+  };
+
+  TRAITS.forEach(t=>{
+    for(let qi=1;qi<=3;qi++){
+      const checked=document.querySelector(`input[name="${t.id}_q${qi}"]:checked`);
+      const qNumGlobal = (TRAITS.indexOf(t)*3)+qi; // 1..30
+      payload["q"+qNumGlobal] = checked? checked.value : "";
+    }
+  });
+
+  document.getElementById("submitBtn").disabled=true;
+  showStatus("Enviando respostas...",false);
+
+  const jsonStr=JSON.stringify(payload);
+  const b64=utf8ToBase64(jsonStr);
+  const cbName="cb_"+Date.now();
+  window[cbName]=function(resp){
+    if(resp.status==="ok"){
+      document.getElementById("lockOverlay").style.display="flex";
+      showStatus(`✅ Enviado com sucesso! Acertos: ${resp.acertos}/30 · Nota: ${resp.nota}`,false,true);
+    } else {
+      showStatus("❌ Erro ao enviar: "+(resp.message||"desconhecido"),true);
+      document.getElementById("submitBtn").disabled=false;
+    }
+    delete window[cbName];
+    script.remove();
+  };
+  const script=document.createElement("script");
+  script.src=`${APPS_SCRIPT_URL}?data=${encodeURIComponent(b64)}&callback=${cbName}`;
+  script.onerror=()=>{
+    showStatus("❌ Falha de conexão com o servidor. Tente novamente.",true);
+    document.getElementById("submitBtn").disabled=false;
+  };
+  document.body.appendChild(script);
+});
+
+function showStatus(msg,isError,isSuccess){
+  const el=document.getElementById("statusMsg");
+  el.textContent=msg;
+  el.className= isError? "error" : (isSuccess? "success":"");
+}
+
+updateProgress();
+</script>
+</body>
+</html>
