@@ -48,27 +48,51 @@
   .chip.gene2{background:var(--orange);}
   .chip.placed{opacity:.25;cursor:default;}
 
-  .square-area{overflow-x:auto;}
-  table.punnett{border-collapse:collapse;}
-  table.punnett td, table.punnett th{border:2px solid #ccc;width:64px;height:54px;text-align:center;vertical-align:middle;font-size:.85rem;}
-  .corner{background:#f0f0f0;}
-  .dropzone{
-    background:#fff;border:2px dashed #999;border-radius:8px;min-width:46px;min-height:34px;
-    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--purple-dark);font-size:1rem;margin:0 auto;
+  .square-area{overflow-x:auto;padding:8px 4px 10px;}
+
+  /* QUADRO DE PUNNETT — alto-relevo (neumorphism) */
+  table.punnett{border-collapse:separate;border-spacing:9px;}
+  table.punnett td, table.punnett th{width:64px;height:56px;text-align:center;vertical-align:middle;font-size:.85rem;}
+  table.punnett td{
+    background:#eef0f5;
+    border-radius:14px;
+    box-shadow:
+      6px 6px 12px rgba(0,0,0,.16),
+      -4px -4px 10px rgba(255,255,255,.9),
+      inset 0 1px 0 rgba(255,255,255,.4);
+    transition:transform .15s ease, box-shadow .2s ease, background .25s ease;
   }
-  .dropzone.filled{border-style:solid;border-color:var(--blue);background:#eaf3fb;}
+  table.punnett td:hover{
+    transform:translateY(-2px);
+    box-shadow:
+      8px 8px 16px rgba(0,0,0,.18),
+      -4px -4px 10px rgba(255,255,255,.9),
+      inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  table.punnett th{background:transparent;}
+  .corner{
+    background:#f0f0f0;border-radius:12px;
+    box-shadow:4px 4px 9px rgba(0,0,0,.13), -3px -3px 8px rgba(255,255,255,.85);
+  }
+  .dropzone{
+    background:#fff;border:2px dashed #999;border-radius:10px;min-width:46px;min-height:34px;
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--purple-dark);font-size:1rem;margin:0 auto;
+    box-shadow:4px 4px 9px rgba(0,0,0,.10), -3px -3px 8px rgba(255,255,255,.75);
+  }
+  .dropzone.filled{border-style:solid;border-color:var(--blue);background:#eaf3fb;box-shadow:3px 3px 8px rgba(41,128,185,.25), -2px -2px 6px rgba(255,255,255,.8);}
   .dropzone.over{border-color:var(--green);background:#eafaf0;}
   .result-cell{font-size:1.4rem;line-height:1.1;}
-  .result-geno{display:block;font-size:.62rem;color:#666;font-weight:700;margin-top:2px;}
-  .cell-drop{width:100%;height:100%;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+  .result-geno{display:block;font-size:.62rem;color:#555;font-weight:800;margin-top:2px;letter-spacing:.3px;}
+  .cell-drop{width:100%;height:100%;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:14px;}
   .allele-slots{display:flex;align-items:center;gap:4px;}
   .plus-sign{font-weight:800;color:#999;font-size:.85rem;}
   .allele-slot{
     width:34px;height:30px;display:flex;align-items:center;justify-content:center;
-    border:2px dashed #ccc;border-radius:6px;font-weight:800;color:#aaa;font-size:.85rem;
+    border:2px dashed #ccc;border-radius:8px;font-weight:800;color:#aaa;font-size:.85rem;
+    box-shadow:inset 2px 2px 4px rgba(0,0,0,.07), inset -1px -1px 3px rgba(255,255,255,.6);
   }
   .allele-slot.over{border-color:var(--green);background:#eafaf0;}
-  .allele-slot.filled{border-style:solid;border-color:var(--blue);background:#eaf3fb;color:var(--purple-dark);}
+  .allele-slot.filled{border-style:solid;border-color:var(--blue);background:#eaf3fb;color:var(--purple-dark);box-shadow:inset 1px 1px 3px rgba(41,128,185,.25);}
   .allele-slot.wrong-flash{border-color:var(--red)!important;background:#fdecea!important;}
   .cell-result{font-size:1.3rem;line-height:1.1;text-align:center;}
   .combo-pool{margin-top:14px;}
@@ -79,6 +103,26 @@
   .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.78rem;margin:10px 0 4px;color:#444;}
   .legend span{display:inline-flex;align-items:center;gap:5px;}
   .swatch{width:14px;height:14px;border-radius:3px;display:inline-block;}
+
+  /* LEGENDA DE GENÓTIPOS (cores que aparecem nos quadradinhos) */
+  .genotype-legend{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px;}
+  .geno-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 12px;border-radius:20px;border:2px solid;
+    font-size:.78rem;font-weight:800;color:#333;background:#fff;
+  }
+
+  /* CONFETES */
+  .confetti-piece{
+    position:fixed;width:8px;height:8px;pointer-events:none;z-index:9999;
+    animation-name:confetti-fall;
+    animation-timing-function:cubic-bezier(.21,.68,.34,1.27);
+    animation-fill-mode:forwards;
+  }
+  @keyframes confetti-fall{
+    0%{transform:translate(0,0) rotate(0deg) scale(1);opacity:1;}
+    100%{transform:translate(var(--dx,0px),var(--dy,140px)) rotate(var(--rot,360deg)) scale(.5);opacity:0;}
+  }
 
   .reset-btn{font-size:.72rem;background:#eee;border:1px solid #ccc;border-radius:6px;padding:4px 10px;cursor:pointer;margin-top:6px;}
   .check-msg{font-size:.8rem;font-weight:700;margin-top:8px;}
@@ -442,6 +486,65 @@ function phenotypeOf(genotype,traitGenes){
 }
 
 /* =========================================================================
+   4b) CORES POR GENÓTIPO — facilita identificar visualmente quadradinhos
+   iguais dentro do mesmo quadro de Punnett.
+   ========================================================================= */
+const GENOTYPE_PALETTE = [
+  {bg:"#FFF3CD", border:"#F1C40F"}, // amarelo
+  {bg:"#D8F3DC", border:"#27AE60"}, // verde
+  {bg:"#D6EAF8", border:"#2980B9"}, // azul
+  {bg:"#FCE4EC", border:"#E91E63"}, // rosa
+  {bg:"#E8DAEF", border:"#9B59B6"}, // roxo
+  {bg:"#FDEBD0", border:"#E67E22"}, // laranja
+  {bg:"#D0ECE7", border:"#1ABC9C"}, // turquesa
+  {bg:"#FADBD8", border:"#E74C3C"}, // vermelho
+  {bg:"#E8EAF6", border:"#5C6BC0"}  // azul-acinzentado
+];
+
+function buildGenotypeColorMap(trait){
+  const g1list = getGametes(trait.parent1);
+  const g2list = getGametes(trait.parent2);
+  const genotypesSet = new Set();
+  g1list.forEach(g1=>{
+    g2list.forEach(g2=>{
+      genotypesSet.add(combineGenotype(g1,g2,trait.genes));
+    });
+  });
+  // ordem alfabética estável -> mesma cor sempre para o mesmo genótipo
+  const genotypes = Array.from(genotypesSet).sort();
+  const map = {};
+  genotypes.forEach((g,idx)=>{ map[g] = GENOTYPE_PALETTE[idx % GENOTYPE_PALETTE.length]; });
+  return map;
+}
+
+/* =========================================================================
+   4c) EFEITO DE CONFETES — disparado a cada combinação correta
+   ========================================================================= */
+const CONFETTI_COLORS = ["#FFC700","#FF3D71","#36D399","#3498DB","#9B59B6","#FF7F50","#1ABC9C","#F1C40F"];
+
+function burstConfetti(x,y){
+  const count = 18;
+  for(let i=0;i<count;i++){
+    const piece=document.createElement("div");
+    piece.className="confetti-piece";
+    piece.style.background = CONFETTI_COLORS[Math.floor(Math.random()*CONFETTI_COLORS.length)];
+    piece.style.borderRadius = Math.random()<0.5 ? "50%" : "2px";
+    piece.style.left = x+"px";
+    piece.style.top  = y+"px";
+    const angle    = Math.random()*2*Math.PI;
+    const distance = 50 + Math.random()*70;
+    const dx = Math.cos(angle)*distance;
+    const dy = Math.sin(angle)*distance*0.5 + 90 + Math.random()*40; // tendência de queda
+    piece.style.setProperty("--dx", dx+"px");
+    piece.style.setProperty("--dy", dy+"px");
+    piece.style.setProperty("--rot", (Math.random()*720-360)+"deg");
+    piece.style.animationDuration = (650+Math.random()*450)+"ms";
+    document.body.appendChild(piece);
+    setTimeout(()=>piece.remove(), 1200);
+  }
+}
+
+/* =========================================================================
    5) RENDERIZAÇÃO DOS SIMULADORES
    ========================================================================= */
 const container=document.getElementById("traitsContainer");
@@ -452,7 +555,9 @@ TRAITS.forEach(trait=>{
   const gametes2=getGametes(trait.parent2);
   const n=gametes1.length; // 2 ou 4
 
-  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}};
+  const genotypeColors = buildGenotypeColorMap(trait);
+
+  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}, genotypeColors:genotypeColors};
 
   if(trait.law===6 || trait.id==="t6"){ /* banner inserted separately below */ }
 
@@ -465,11 +570,19 @@ TRAITS.forEach(trait=>{
     `<span><span class="swatch" style="background:#eee;"></span>${g.domIcon} ${g.domLabel} (dominante: ${g.dom}) &nbsp;|&nbsp; ${g.recIcon} ${g.recLabel} (recessivo: ${g.rec})</span>`
   ).join("<br>");
 
+  // legenda de cores por genótipo (mesma cor = mesmo genótipo no quadro)
+  const genotypeLegendHtml = Object.keys(genotypeColors).sort().map(g=>{
+    const ph = phenotypeOf(g, trait.genes);
+    const c  = genotypeColors[g];
+    return `<span class="geno-chip" style="background:${c.bg};border-color:${c.border};">${g} ${ph.icon}</span>`;
+  }).join("");
+
   card.innerHTML = `
     <div class="trait-title">${trait.title}</div>
     <div class="trait-desc">${trait.desc}</div>
     <div class="parents-info">👨 Genitor 1: <b>${trait.parent1}</b> &nbsp;&nbsp; 👩 Genitor 2: <b>${trait.parent2}</b></div>
     <div class="legend">${legendHtml}</div>
+    <div class="genotype-legend">${genotypeLegendHtml}</div>
     <div class="punnett-wrap">
       <div class="pools">
         <div class="pool-box">
@@ -704,6 +817,21 @@ function handleAlleleDrop(trait,r,c,side,value,tileId){
       const ph=phenotypeOf(genotype,trait.genes);
       const resultEl=document.getElementById(`cellresult_${trait.id}_${r}_${c}`);
       resultEl.innerHTML=`<div class="result-cell">${ph.icon}</div><span class="result-geno">${genotype}</span>`;
+
+      // colore o quadradinho de acordo com o genótipo (mesma cor = mesmo genótipo)
+      const cellEl = document.getElementById(`cell_${trait.id}_${r}_${c}`);
+      const colorInfo = st.genotypeColors[genotype];
+      if(cellEl && colorInfo){
+        cellEl.style.background = colorInfo.bg;
+        cellEl.style.boxShadow = `6px 6px 12px rgba(0,0,0,.16), -4px -4px 10px rgba(255,255,255,.9), inset 0 0 0 3px ${colorInfo.border}`;
+      }
+
+      // confete a cada combinação correta
+      if(cellEl){
+        const rect = cellEl.getBoundingClientRect();
+        burstConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
+      }
+
       st.filledCells++;
       if(st.filledCells>=st.p1Slots.length*st.p2Slots.length){
         markTraitComplete(trait);
@@ -733,6 +861,7 @@ function resetTrait(trait){
   document.querySelectorAll(`[id^="drop_${trait.id}_"]`).forEach(dz=>{dz.textContent="?";dz.classList.remove("filled");});
   document.querySelectorAll(`[id^="slotp1_${trait.id}_"], [id^="slotp2_${trait.id}_"]`).forEach(s=>{s.textContent="?";s.classList.remove("filled","wrong-flash");});
   document.querySelectorAll(`[id^="cellresult_${trait.id}_"]`).forEach(c=>c.innerHTML="");
+  document.querySelectorAll(`[id^="cell_${trait.id}_"]`).forEach(c=>{ c.style.background=""; c.style.boxShadow=""; });
   document.querySelectorAll(`[id^="chip_${trait.id}_"]`).forEach(c=>c.classList.remove("placed"));
   const poolBox=document.getElementById("combopool_"+trait.id);
   poolBox.style.display="none";
@@ -871,4 +1000,4 @@ function showStatus(msg,isError,isSuccess){
 updateProgress();
 </script>
 </body>
-</html>
+  </html>
