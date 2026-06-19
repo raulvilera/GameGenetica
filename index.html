@@ -22,7 +22,8 @@
   #emailInput{flex:1 1 260px;min-width:220px;background:#f4f6f9;color:#444;}
   .line{flex:1;border-bottom:1px solid #888;min-width:80px;height:22px;}
   .activity-title{text-align:center;font-weight:900;font-size:1.4rem;color:var(--purple);margin:18px 0 6px;text-transform:uppercase;}
-  .activity-sub{text-align:center;color:#666;font-size:.85rem;margin-bottom:26px;}
+  .activity-sub{text-align:center;color:#666;font-size:.85rem;margin-bottom:8px;}
+  .activity-eval-note{text-align:center;color:#888;font-size:.78rem;margin-bottom:26px;font-style:italic;}
 
   .progress-bar{position:sticky;top:0;background:#fff;padding:8px 0;border-bottom:2px solid #eee;z-index:50;margin-bottom:18px;}
   .progress-track{height:10px;background:#eee;border-radius:6px;overflow:hidden;}
@@ -35,6 +36,7 @@
   .trait-title{font-size:1.05rem;font-weight:800;color:var(--purple-dark);margin-bottom:4px;}
   .trait-desc{font-size:.85rem;color:#555;margin-bottom:14px;}
   .parents-info{font-size:.82rem;background:#eef1fb;border-radius:8px;padding:8px 12px;margin-bottom:14px;display:inline-block;}
+  .eval-badge{font-size:.72rem;background:#fdf2e9;color:#a85a00;border:1px solid #f3c98b;border-radius:8px;padding:4px 10px;margin-bottom:14px;display:inline-block;margin-left:8px;font-weight:700;}
 
   .punnett-wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;margin-bottom:16px;}
   .pools{display:flex;flex-direction:column;gap:14px;min-width:150px;}
@@ -182,10 +184,11 @@
 
   <div class="activity-title">Atividade de Genética</div>
   <div class="activity-sub">1ª e 2ª Leis de Mendel · Simuladores de Quadro de Punnett · Ciências · 9º Ano</div>
+  <div class="activity-eval-note">Avaliação: cada quadro de Punnett vale de 0 a 10, e cada uma das 4 questões de cada cruzamento também vale de 0 a 10.</div>
 
   <div class="progress-bar">
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-label" id="progressLabel">0 / 10 quadros completos · 0 / 30 questões respondidas</div>
+    <div class="progress-label" id="progressLabel">0 / 5 quadros completos · 0 / 20 questões respondidas</div>
   </div>
 
   <div id="traitsContainer"></div>
@@ -277,35 +280,15 @@ const STUDENTS = [
 ];
 
 /* =========================================================================
-   2) TRAITS — 5 de 1ª Lei (monoibridismo) + 5 de 2ª Lei (di-hibridismo)
+   2) TRAITS — 1 de 1ª Lei (monoibridismo) + 4 de 2ª Lei (di-hibridismo)
    ========================================================================= */
 const TRAITS = [
-{id:"t1",law:1,title:"1. Cor da flor da ervilha (Pisum sativum)",
+{id:"t1",law:1,title:"1. Cor da flor da ervilha (Pisum sativum) — 1ª Lei de Mendel",
  desc:"Cruzamento de duas plantas heterozigotas para a cor da flor.",
  parent1:"Bb",parent2:"Bb",
  genes:[{dom:"B",rec:"b",domLabel:"Púrpura",recLabel:"Branca",domIcon:"🟣",recIcon:"⚪"}]},
 
-{id:"t2",law:1,title:"2. Cor da semente da ervilha",
- desc:"Cruzamento de duas plantas heterozigotas para a cor da semente.",
- parent1:"Vv",parent2:"Vv",
- genes:[{dom:"V",rec:"v",domLabel:"Amarela",recLabel:"Verde",domIcon:"🟡",recIcon:"🟢"}]},
-
-{id:"t3",law:1,title:"3. Textura da semente da ervilha",
- desc:"Cruzamento de duas plantas heterozigotas para a textura da semente.",
- parent1:"Ll",parent2:"Ll",
- genes:[{dom:"L",rec:"l",domLabel:"Lisa",recLabel:"Rugosa",domIcon:"⚪",recIcon:"🌰"}]},
-
-{id:"t4",law:1,title:"4. Pigmentação da pele em humanos (Albinismo)",
- desc:"Cruzamento de dois indivíduos heterozigotos (portadores) para albinismo.",
- parent1:"Aa",parent2:"Aa",
- genes:[{dom:"A",rec:"a",domLabel:"Pigmentação normal",recLabel:"Albinismo",domIcon:"🧑🏽",recIcon:"🧑🏻"}]},
-
-{id:"t5",law:1,title:"5. Polidactilia em humanos",
- desc:"Cruzamento de dois indivíduos heterozigotos para a condição (dedos extras é dominante).",
- parent1:"Dd",parent2:"Dd",
- genes:[{dom:"D",rec:"d",domLabel:"Polidactilia (dedo extra)",recLabel:"Mão normal",domIcon:"🖐️➕",recIcon:"🖐️"}]},
-
-{id:"t6",law:2,title:"6. Cor + textura da semente da ervilha (di-hibridismo clássico de Mendel)",
+{id:"t6",law:2,title:"2. Cor + textura da semente da ervilha — 2ª Lei de Mendel (di-hibridismo clássico)",
  desc:"Cruzamento de duas plantas duplo-heterozigotas (VvLl × VvLl).",
  parent1:"VvLl",parent2:"VvLl",
  genes:[
@@ -313,7 +296,7 @@ const TRAITS = [
    {dom:"L",rec:"l",domLabel:"Lisa",recLabel:"Rugosa",domIcon:"⬤",recIcon:"✺"}
  ]},
 
-{id:"t7",law:2,title:"7. Cor e comprimento do pelo em cobaias",
+{id:"t7",law:2,title:"3. Cor e comprimento do pelo em cobaias — 2ª Lei de Mendel",
  desc:"Cruzamento de duas cobaias duplo-heterozigotas (PpCc × PpCc).",
  parent1:"PpCc",parent2:"PpCc",
  genes:[
@@ -321,7 +304,7 @@ const TRAITS = [
    {dom:"C",rec:"c",domLabel:"Pelo curto",recLabel:"Pelo longo",domIcon:"🐹",recIcon:"🐾"}
  ]},
 
-{id:"t8",law:2,title:"8. Cor dos olhos e tipo de lóbulo da orelha em humanos",
+{id:"t8",law:2,title:"4. Cor dos olhos e tipo de lóbulo da orelha em humanos — 2ª Lei de Mendel",
  desc:"Cruzamento de dois indivíduos duplo-heterozigotos (MmSs × MmSs).",
  parent1:"MmSs",parent2:"MmSs",
  genes:[
@@ -329,107 +312,68 @@ const TRAITS = [
    {dom:"S",rec:"s",domLabel:"Lóbulo solto",recLabel:"Lóbulo aderente",domIcon:"👂",recIcon:"👂🔗"}
  ]},
 
-{id:"t9",law:2,title:"9. Cor e formato da vagem da ervilha",
+{id:"t9",law:2,title:"5. Cor e formato da vagem da ervilha — 2ª Lei de Mendel",
  desc:"Cruzamento de duas plantas duplo-heterozigotas (CcFf × CcFf).",
  parent1:"CcFf",parent2:"CcFf",
  genes:[
    {dom:"C",rec:"c",domLabel:"Vagem verde",recLabel:"Vagem amarela",domIcon:"🟢",recIcon:"🟡"},
    {dom:"F",rec:"f",domLabel:"Vagem inflada",recLabel:"Vagem constrita",domIcon:"🫛",recIcon:"➰"}
- ]},
-
-{id:"t10",law:2,title:"10. Tipo de cabelo e presença de sardas em humanos",
- desc:"Cruzamento de dois indivíduos duplo-heterozigotos (RrSs × RrSs).",
- parent1:"RrSs",parent2:"RrSs",
- genes:[
-   {dom:"R",rec:"r",domLabel:"Cabelo crespo",recLabel:"Cabelo liso",domIcon:"🦱",recIcon:"💇"},
-   {dom:"S",rec:"s",domLabel:"Com sardas",recLabel:"Sem sardas",domIcon:"🟤🟤",recIcon:"😶"}
  ]}
 ];
 
 /* =========================================================================
-   3) QUESTÕES — 3 por traço (30 no total)
-   Formato: {text, options:[A,B,C,D], correct:"A"/"B"/"C"/"D"}
+   3) QUESTÕES — 4 por cruzamento (20 no total), opções a) b) c) d)
    ========================================================================= */
 const QUESTIONS = {
 t1:[
  {text:"Qual a proporção fenotípica esperada na geração F1 desse cruzamento (Bb × Bb)?",
-  options:["1 púrpura : 1 branca","3 púrpura : 1 branca","1 púrpura : 3 branca","Todas púrpuras"],correct:"B"},
+  options:["1 púrpura : 1 branca","3 púrpura : 1 branca","1 púrpura : 3 branca","Todas púrpuras"],correct:"b"},
  {text:"Qual genótipo representa uma planta de flor branca?",
-  options:["BB","Bb","bb","BbBb"],correct:"C"},
+  options:["BB","Bb","bb","BbBb"],correct:"c"},
  {text:"Esse cruzamento exemplifica qual conceito da 1ª Lei de Mendel?",
-  options:["Segregação independente de dois genes","Ligação gênica","Segregação de um par de alelos (monoibridismo)","Codominância"],correct:"C"}
-],
-t2:[
- {text:"No cruzamento Vv × Vv, qual fração dos descendentes terá semente verde?",
-  options:["1/4","1/2","3/4","Todos"],correct:"A"},
- {text:"O genótipo VV representa um indivíduo:",
-  options:["Heterozigoto","Homozigoto dominante","Homozigoto recessivo","Híbrido"],correct:"B"},
- {text:"Por que a cor verde só aparece quando os dois alelos são 'v'?",
-  options:["Porque v é dominante","Porque v é recessivo e só se manifesta em homozigose","Porque V é letal","Porque não há relação entre genótipo e fenótipo"],correct:"B"}
-],
-t3:[
- {text:"No cruzamento Ll × Ll, qual a proporção esperada de semente rugosa?",
-  options:["1/4","1/2","3/4","0"],correct:"A"},
- {text:"Um indivíduo Ll é chamado de:",
-  options:["Homozigoto dominante","Homozigoto recessivo","Heterozigoto","Mutante"],correct:"C"},
- {text:"Se cruzarmos LL × ll, qual será o fenótipo de toda a geração F1?",
-  options:["Todos lisos","Todos rugosos","50% lisos e 50% rugosos","Metade estéril"],correct:"A"}
-],
-t4:[
- {text:"Dois pais portadores (Aa × Aa) têm um filho. Qual a probabilidade de ele ser albino?",
-  options:["0%","25%","50%","75%"],correct:"B"},
- {text:"Por que dois pais com pigmentação normal podem ter um filho albino?",
-  options:["Porque ambos são homozigotos dominantes","Porque ambos são heterozigotos (portadores) e o filho recebeu 'a' de cada um","Porque houve mutação espontânea obrigatória","Isso é impossível geneticamente"],correct:"B"},
- {text:"O alelo causador do albinismo, nesse exemplo, é:",
-  options:["Dominante","Recessivo","Codominante","Ligado ao sexo"],correct:"B"}
-],
-t5:[
- {text:"No cruzamento Dd × Dd, qual a proporção esperada de filhos com mão normal?",
-  options:["1/4","1/2","3/4","1"],correct:"A"},
- {text:"Um indivíduo com genótipo dd terá:",
-  options:["Polidactilia","Mão normal","Mãos com tamanhos diferentes","Não é possível saber"],correct:"B"},
- {text:"Esse exemplo mostra que uma característica considerada 'anormal' (dedo extra) pode ser geneticamente:",
-  options:["Sempre recessiva","Dominante","Inexistente em humanos","Causada apenas pelo ambiente"],correct:"B"}
+  options:["Segregação independente de dois genes","Ligação gênica","Segregação de um par de alelos (monoibridismo)","Codominância"],correct:"c"},
+ {text:"Se uma planta de flor púrpura pura (BB) for cruzada com uma planta de flor branca (bb), qual o fenótipo esperado em toda a geração F1?",
+  options:["Todas púrpuras","Todas brancas","50% púrpura e 50% branca","3 púrpura : 1 branca"],correct:"a"}
 ],
 t6:[
  {text:"No cruzamento VvLl × VvLl, qual a proporção fenotípica clássica esperada em F2?",
-  options:["9:3:3:1","3:1","1:1:1:1","1:2:1"],correct:"A"},
+  options:["9:3:3:1","3:1","1:1:1:1","1:2:1"],correct:"a"},
  {text:"Qual genótipo abaixo produz o fenótipo 'semente verde e rugosa'?",
-  options:["VvLl","VVLL","vvll","VvLL"],correct:"C"},
+  options:["VvLl","VVLL","vvll","VvLL"],correct:"c"},
  {text:"Esse cruzamento ilustra principalmente:",
-  options:["A 1ª Lei de Mendel (segregação)","A 2ª Lei de Mendel (segregação independente de genes em cromossomos diferentes)","Herança ligada ao sexo","Mutação gênica"],correct:"B"}
+  options:["A 1ª Lei de Mendel (segregação)","A 2ª Lei de Mendel (segregação independente de genes em cromossomos diferentes)","Herança ligada ao sexo","Mutação gênica"],correct:"b"},
+ {text:"Quantos tipos diferentes de gametas uma planta VvLl pode produzir?",
+  options:["2","4","8","16"],correct:"b"}
 ],
 t7:[
  {text:"Quantos tipos de gametas uma cobaia PpCc pode produzir, considerando os dois genes?",
-  options:["2","4","8","16"],correct:"B"},
+  options:["2","4","8","16"],correct:"b"},
  {text:"Qual fenótipo corresponde ao genótipo ppCc?",
-  options:["Pelo preto e curto","Pelo branco e curto","Pelo preto e longo","Pelo branco e longo"],correct:"B"},
+  options:["Pelo preto e curto","Pelo branco e curto","Pelo preto e longo","Pelo branco e longo"],correct:"b"},
  {text:"Para que os genes de cor e comprimento do pelo se segreguem de forma independente, eles devem estar:",
-  options:["No mesmo cromossomo, próximos","Em cromossomos diferentes (ou distantes no mesmo cromossomo)","No cromossomo sexual","Ausentes no genoma"],correct:"B"}
+  options:["No mesmo cromossomo, próximos","Em cromossomos diferentes (ou distantes no mesmo cromossomo)","No cromossomo sexual","Ausentes no genoma"],correct:"b"},
+ {text:"No cruzamento PpCc × PpCc, qual a proporção esperada de descendentes com pelo preto e longo (P_cc)?",
+  options:["1/16","3/16","9/16","1/4"],correct:"b"}
 ],
 t8:[
  {text:"No cruzamento MmSs × MmSs, qual a chance de um filho ter olhos azuis E lóbulo aderente (mmss)?",
-  options:["1/16","1/4","9/16","1/2"],correct:"A"},
+  options:["1/16","1/4","9/16","1/2"],correct:"a"},
  {text:"Um indivíduo MmSs é, em relação aos dois genes:",
-  options:["Duplo-homozigoto","Duplo-heterozigoto","Hemizigoto","Aneuploide"],correct:"B"},
+  options:["Duplo-homozigoto","Duplo-heterozigoto","Hemizigoto","Aneuploide"],correct:"b"},
  {text:"A proporção 9:3:3:1 esperada nesse cruzamento di-híbrido reflete:",
-  options:["Ligação completa entre os genes","Segregação independente de dois pares de alelos","Ausência de dominância","Herança citoplasmática"],correct:"B"}
+  options:["Ligação completa entre os genes","Segregação independente de dois pares de alelos","Ausência de dominância","Herança citoplasmática"],correct:"b"},
+ {text:"No cruzamento MmSs × MmSs, qual a proporção esperada de descendentes com olhos castanhos e lóbulo solto (fenótipo duplo-dominante)?",
+  options:["1/16","3/16","9/16","1/4"],correct:"c"}
 ],
 t9:[
  {text:"Qual genótipo representa uma vagem amarela e constrita?",
-  options:["CcFf","ccff","CCFF","CcFF"],correct:"B"},
+  options:["CcFf","ccff","CCFF","CcFF"],correct:"b"},
  {text:"No cruzamento CcFf × CcFf, qual fração da progênie deve ser verde e inflada (fenótipo duplo-dominante)?",
-  options:["1/16","3/16","9/16","1/4"],correct:"C"},
+  options:["1/16","3/16","9/16","1/4"],correct:"c"},
  {text:"Os genes para cor e formato da vagem segregam de forma independente porque:",
-  options:["Estão no mesmo cromossomo sempre ligados","Estão localizados em cromossomos diferentes","Não existem em ervilhas","Um depende do outro para se expressar"],correct:"B"}
-],
-t10:[
- {text:"Qual a probabilidade de um filho do cruzamento RrSs × RrSs ter cabelo liso e sem sardas (rrss)?",
-  options:["1/16","1/4","9/16","1/2"],correct:"A"},
- {text:"Um indivíduo RrSs apresenta qual fenótipo?",
-  options:["Cabelo liso, sem sardas","Cabelo crespo, com sardas","Cabelo crespo, sem sardas","Calvície"],correct:"B"},
- {text:"A proporção 9:3:3:1 observada nesse cruzamento é a base experimental da:",
-  options:["1ª Lei de Mendel","2ª Lei de Mendel (Lei da Segregação Independente)","Lei de Hardy-Weinberg","Teoria cromossômica do sexo"],correct:"B"}
+  options:["Estão no mesmo cromossomo sempre ligados","Estão localizados em cromossomos diferentes","Não existem em ervilhas","Um depende do outro para se expressar"],correct:"b"},
+ {text:"Os genes responsáveis pela cor e pelo formato da vagem, nesse cruzamento, encontram-se localizados:",
+  options:["No mesmo cromossomo, sempre juntos","Em cromossomos diferentes, segregando-se independentemente","Apenas no cromossomo sexual","Fora do núcleo celular"],correct:"b"}
 ]
 };
 
@@ -559,8 +503,6 @@ TRAITS.forEach(trait=>{
 
   state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}, genotypeColors:genotypeColors};
 
-  if(trait.law===6 || trait.id==="t6"){ /* banner inserted separately below */ }
-
   const card=document.createElement("div");
   card.className="trait-card";
   card.id="card_"+trait.id;
@@ -581,6 +523,7 @@ TRAITS.forEach(trait=>{
     <div class="trait-title">${trait.title}</div>
     <div class="trait-desc">${trait.desc}</div>
     <div class="parents-info">👨 Genitor 1: <b>${trait.parent1}</b> &nbsp;&nbsp; 👩 Genitor 2: <b>${trait.parent2}</b></div>
+    <span class="eval-badge">⭐ Quadro de Punnett: 0 a 10 · cada questão: 0 a 10</span>
     <div class="legend">${legendHtml}</div>
     <div class="genotype-legend">${genotypeLegendHtml}</div>
     <div class="punnett-wrap">
@@ -668,12 +611,12 @@ TRAITS.forEach(trait=>{
 
   card.querySelector("#reset_"+trait.id).addEventListener("click",()=>resetTrait(trait));
 
-  // questões
+  // questões (4 por cruzamento, opções a) b) c) d))
   const qContainer=card.querySelector("#questions_"+trait.id);
+  const letters=["a","b","c","d"];
   QUESTIONS[trait.id].forEach((q,qi)=>{
     const qDiv=document.createElement("div");
     qDiv.className="question";
-    const letters=["A","B","C","D"];
     qDiv.innerHTML = `<div class="qtext">${qi+1}) ${q.text}</div>
       <div class="opts">
         ${q.options.map((opt,oi)=>`
@@ -846,7 +789,7 @@ function handleAlleleDrop(trait,r,c,side,value,tileId){
 function markTraitComplete(trait){
   state[trait.id].completed=true;
   const msg=document.getElementById("msg_"+trait.id);
-  msg.textContent="✅ Quadro de Punnett completo! Observe os fenótipos gerados e responda às questões abaixo.";
+  msg.textContent="✅ Quadro de Punnett completo! (vale 10 pontos) Observe os fenótipos gerados e responda às questões abaixo.";
   msg.classList.remove("pending"); msg.classList.add("ok");
   updateProgress();
 }
@@ -874,11 +817,18 @@ function resetTrait(trait){
 
 /* =========================================================================
    6) PROGRESSO / VALIDAÇÃO GLOBAL
+   Avaliação: 5 quadros de Punnett (0-10 cada) + 20 questões (0-10 cada,
+   sendo 4 questões por cruzamento). A nota final/acertos é calculada e
+   confirmada pelo backend (Apps Script) ao receber o payload abaixo.
    ========================================================================= */
+const TOTAL_TRAITS = TRAITS.length;        // 5
+const QUESTIONS_PER_TRAIT = 4;
+const TOTAL_QUESTIONS = TOTAL_TRAITS * QUESTIONS_PER_TRAIT; // 20
+
 function countAnsweredQuestions(){
   let count=0;
   TRAITS.forEach(t=>{
-    for(let qi=1;qi<=3;qi++){
+    for(let qi=1;qi<=QUESTIONS_PER_TRAIT;qi++){
       if(document.querySelector(`input[name="${t.id}_q${qi}"]:checked`)) count++;
     }
   });
@@ -890,11 +840,11 @@ function countCompletedSquares(){
 function updateProgress(){
   const squares=countCompletedSquares();
   const answered=countAnsweredQuestions();
-  const pct=Math.round(((squares/10)*50)+((answered/30)*50));
+  const pct=Math.round(((squares/TOTAL_TRAITS)*50)+((answered/TOTAL_QUESTIONS)*50));
   document.getElementById("progressFill").style.width=pct+"%";
-  document.getElementById("progressLabel").textContent=`${squares} / 10 quadros completos · ${answered} / 30 questões respondidas`;
+  document.getElementById("progressLabel").textContent=`${squares} / ${TOTAL_TRAITS} quadros completos · ${answered} / ${TOTAL_QUESTIONS} questões respondidas`;
   const studentOk = document.getElementById("studentSelect").value!=="" && document.getElementById("dataInput").value.trim()!=="";
-  document.getElementById("submitBtn").disabled = !(squares===10 && answered===30 && studentOk);
+  document.getElementById("submitBtn").disabled = !(squares===TOTAL_TRAITS && answered===TOTAL_QUESTIONS && studentOk);
 }
 function onAnswerChange(){ updateProgress(); }
 
@@ -954,13 +904,20 @@ document.getElementById("submitBtn").addEventListener("click",()=>{
     studentGrade: s.t==="9oA"?"9º Ano A":"9º Ano B",
     studentEmail:s.email,
     date:data,
-    switchCount:switchCount
+    switchCount:switchCount,
+    totalTraits:TOTAL_TRAITS,
+    questionsPerTrait:QUESTIONS_PER_TRAIT,
+    totalQuestions:TOTAL_QUESTIONS
   };
 
+  // Para cada cruzamento: nota do quadro de Punnett (0 ou 10, pois só é
+  // marcado como "completo" quando todas as combinações estão corretas)
+  // e as 4 respostas do aluno (a/b/c/d) para correção no backend.
   TRAITS.forEach(t=>{
-    for(let qi=1;qi<=3;qi++){
+    payload["punnett_"+t.id] = state[t.id].completed ? 10 : 0;
+    for(let qi=1;qi<=QUESTIONS_PER_TRAIT;qi++){
       const checked=document.querySelector(`input[name="${t.id}_q${qi}"]:checked`);
-      const qNumGlobal = (TRAITS.indexOf(t)*3)+qi; // 1..30
+      const qNumGlobal = (TRAITS.indexOf(t)*QUESTIONS_PER_TRAIT)+qi; // 1..20
       payload["q"+qNumGlobal] = checked? checked.value : "";
     }
   });
@@ -974,7 +931,7 @@ document.getElementById("submitBtn").addEventListener("click",()=>{
   window[cbName]=function(resp){
     if(resp.status==="ok"){
       document.getElementById("lockOverlay").style.display="flex";
-      showStatus(`✅ Enviado com sucesso! Acertos: ${resp.acertos}/30 · Nota: ${resp.nota}`,false,true);
+      showStatus(`✅ Enviado com sucesso! Acertos: ${resp.acertos}/${TOTAL_QUESTIONS} · Nota: ${resp.nota}`,false,true);
     } else {
       showStatus("❌ Erro ao enviar: "+(resp.message||"desconhecido"),true);
       document.getElementById("submitBtn").disabled=false;
@@ -1000,4 +957,4 @@ function showStatus(msg,isError,isSuccess){
 updateProgress();
 </script>
 </body>
-  </html>
+</html>
