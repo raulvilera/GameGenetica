@@ -18,6 +18,14 @@
   .id-row label{font-weight:700;white-space:nowrap;}
   .id-row select, .id-row input{padding:6px 8px;border:1px solid #bbb;border-radius:6px;font-size:.92rem;}
   #studentSelect{flex:1 1 100%;min-width:280px;}
+  #studentSelect.estudante-9oA{color:#c62828;font-weight:900;border-color:#c62828;background:#fff5f5;}
+  #studentSelect.estudante-9oB{color:#1b5e20;font-weight:900;border-color:#1b5e20;background:#f2fbf3;}
+  #studentSelect option.turma-9oA-list{color:#c62828;font-weight:800;}
+  #studentSelect option.turma-9oA-list.alt{background:#ffebee;}
+  #studentSelect option.turma-9oA-list:not(.alt){background:#fff7f7;}
+  #studentSelect option.turma-9oB-list{color:#1b5e20;font-weight:800;}
+  #studentSelect option.turma-9oB-list.alt{background:#e8f5e9;}
+  #studentSelect option.turma-9oB-list:not(.alt){background:#f6fff7;}
   #turmaSelect{flex:0 0 140px;min-width:140px;}
   #turmaSelect.turma-9oA{color:#c62828;font-weight:900;}
   #turmaSelect.turma-9oB{color:#1b5e20;font-weight:900;}
@@ -955,24 +963,31 @@ STUDENTS.forEach(s=>grouped[s.t].push(s));
 ["9oA","9oB"].forEach(turma=>{
   const og=document.createElement("optgroup");
   og.label = turma==="9oA"? "9º Ano A":"9º Ano B";
-  grouped[turma].sort((a,b)=>a.n-b.n).forEach(s=>{
+  grouped[turma].sort((a,b)=>a.n-b.n).forEach((s,idx)=>{
     const opt=document.createElement("option");
     opt.value=JSON.stringify(s);
     opt.textContent=s.name;
+    opt.className=(turma==="9oA" ? "turma-9oA-list" : "turma-9oB-list") + (idx%2 ? " alt" : "");
     og.appendChild(opt);
   });
   studentSelect.appendChild(og);
 });
+function styleStudentField(turma){
+  studentSelect.classList.remove("estudante-9oA","estudante-9oB");
+  if(turma==="9oA") studentSelect.classList.add("estudante-9oA");
+  if(turma==="9oB") studentSelect.classList.add("estudante-9oB");
+}
 function styleTurmaField(turma){
   turmaSelect.classList.remove("turma-9oA","turma-9oB");
   if(turma==="9oA") turmaSelect.classList.add("turma-9oA");
   if(turma==="9oB") turmaSelect.classList.add("turma-9oB");
 }
 studentSelect.addEventListener("change",()=>{
-  if(!studentSelect.value){ turmaSelect.value=""; numLine.textContent=""; emailInput.value=""; styleTurmaField(""); updateProgress(); return; }
+  if(!studentSelect.value){ turmaSelect.value=""; numLine.textContent=""; emailInput.value=""; styleTurmaField(""); styleStudentField(""); updateProgress(); return; }
   const s=JSON.parse(studentSelect.value);
   turmaSelect.value=s.t;
   styleTurmaField(s.t);
+  styleStudentField(s.t);
   numLine.textContent=s.n;
   emailInput.value=s.email||"";
   updateProgress();
