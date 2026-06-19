@@ -8,8 +8,8 @@
     --purple:#764ba2; --purple-dark:#5a3780; --blue:#2980b9; --green:#27ae60; --red:#e74c3c; --orange:#f39c12;
   }
   *{box-sizing:border-box;}
-  body{font-family:Arial,Helvetica,sans-serif;background:#f4f6f9;margin:0;padding:18px;color:#222;}
-  .sheet{max-width:980px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 4px 22px rgba(0,0,0,.12);padding:26px 30px 40px;}
+  body{font-family:Arial,Helvetica,sans-serif;background:#d8dadd;margin:0;padding:18px;color:#222;}
+  .sheet{max-width:1080px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 9px 32px rgba(40,44,52,.20),0 2px 0 rgba(255,255,255,.9) inset;padding:26px 30px 40px;}
 
   /* CABEÇALHO ESCOLAR */
   .school-header{text-align:center;font-weight:800;font-size:1.05rem;letter-spacing:.3px;margin-bottom:14px;text-transform:uppercase;color:#333;}
@@ -32,7 +32,12 @@
 
   .law-banner{background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:10px 18px;border-radius:10px;font-weight:800;margin:30px 0 18px;font-size:1rem;}
 
-  .trait-card{border:1px solid #e2e2e2;border-radius:12px;padding:20px 22px;margin-bottom:24px;background:#fafbfd;}
+  .trait-card{
+    position:relative;border:1px solid #d9dce3;border-radius:12px;padding:20px 22px;margin-bottom:30px;
+    background:linear-gradient(145deg,#ffffff,#eef1f6);
+    box-shadow:0 2mm 4mm rgba(34,39,48,.22),0 18px 34px rgba(34,39,48,.12),inset 0 1px 0 rgba(255,255,255,.95);
+    transform:translateZ(0);
+  }
   .trait-title{font-size:1.05rem;font-weight:800;color:var(--purple-dark);margin-bottom:4px;}
   .trait-desc{font-size:.85rem;color:#555;margin-bottom:14px;}
   .parents-info{font-size:.82rem;background:#eef1fb;border-radius:8px;padding:8px 12px;margin-bottom:14px;display:inline-block;}
@@ -50,22 +55,28 @@
   .chip.gene2{background:var(--orange);}
   .chip.placed{opacity:.25;cursor:default;}
 
-  .square-area{overflow-x:auto;padding:8px 4px 10px;}
+  .square-area{
+    overflow-x:auto;padding:12px 12px 14px;border-radius:14px;background:#dfe2e7;
+    box-shadow:inset 4px 4px 9px rgba(0,0,0,.11),inset -4px -4px 9px rgba(255,255,255,.65);
+    perspective:900px;
+  }
 
   /* QUADRO DE PUNNETT — alto-relevo (neumorphism) */
-  table.punnett{border-collapse:separate;border-spacing:9px;}
+  table.punnett{border-collapse:separate;border-spacing:9px;transform:rotateX(2deg);transform-origin:center top;}
   table.punnett td, table.punnett th{width:64px;height:56px;text-align:center;vertical-align:middle;font-size:.85rem;}
   table.punnett td{
-    background:#eef0f5;
+    background:linear-gradient(145deg,#ffffff,#d9dde6);
     border-radius:14px;
     box-shadow:
-      6px 6px 12px rgba(0,0,0,.16),
-      -4px -4px 10px rgba(255,255,255,.9),
-      inset 0 1px 0 rgba(255,255,255,.4);
+      0 2mm 3mm rgba(34,39,48,.20),
+      8px 8px 15px rgba(0,0,0,.16),
+      -5px -5px 12px rgba(255,255,255,.92),
+      inset 0 1px 0 rgba(255,255,255,.85);
+    transform:translateZ(10px);
     transition:transform .15s ease, box-shadow .2s ease, background .25s ease;
   }
   table.punnett td:hover{
-    transform:translateY(-2px);
+    transform:translateY(-2px) translateZ(18px);
     box-shadow:
       8px 8px 16px rgba(0,0,0,.18),
       -4px -4px 10px rgba(255,255,255,.9),
@@ -131,8 +142,22 @@
   .check-msg.ok{color:var(--green);}
   .check-msg.pending{color:#999;}
 
+  .phenotype-panel{
+    flex:1 1 260px;min-width:240px;max-width:320px;border-radius:14px;padding:14px;background:linear-gradient(145deg,#ffffff,#edf0f5);
+    box-shadow:0 2mm 4mm rgba(34,39,48,.20),8px 8px 16px rgba(0,0,0,.12),-4px -4px 10px rgba(255,255,255,.80);
+  }
+  .phenotype-title{font-weight:900;color:var(--purple-dark);font-size:.86rem;margin-bottom:4px;text-transform:uppercase;}
+  .phenotype-sub{font-size:.74rem;color:#666;margin-bottom:10px;}
+  .phenotype-list{display:flex;flex-direction:column;gap:8px;}
+  .phenotype-empty{font-size:.8rem;color:#777;background:#f8fafc;border:1px dashed #c7ccd6;border-radius:10px;padding:10px;}
+  .phenotype-item{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;background:#fff;border:1px solid #dde2ea;border-radius:10px;padding:8px;box-shadow:0 2mm 3mm rgba(34,39,48,.13);}
+  .phenotype-img{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;background:#eef1f7;box-shadow:inset 2px 2px 5px rgba(0,0,0,.08),inset -2px -2px 5px rgba(255,255,255,.75);}
+  .phenotype-name{font-size:.78rem;font-weight:800;color:#333;line-height:1.25;}
+  .phenotype-genos{font-size:.68rem;color:#666;margin-top:2px;}
+  .phenotype-count{font-size:.78rem;font-weight:900;color:#fff;background:var(--purple);border-radius:999px;padding:4px 8px;white-space:nowrap;}
+
   .questions{margin-top:16px;border-top:1px dashed #ccc;padding-top:14px;}
-  .question{margin-bottom:14px;}
+  .question{margin-bottom:3mm;padding:10px 12px;border-radius:10px;background:#fff;box-shadow:0 2mm 3mm rgba(34,39,48,.14);}
   .qtext{font-weight:700;font-size:.9rem;margin-bottom:6px;}
   .opts{display:flex;flex-direction:column;gap:5px;}
   .opt{font-size:.86rem;display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;cursor:pointer;}
@@ -501,7 +526,7 @@ TRAITS.forEach(trait=>{
 
   const genotypeColors = buildGenotypeColorMap(trait);
 
-  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}, genotypeColors:genotypeColors};
+  state[trait.id]={p1Slots:new Array(n).fill(null), p2Slots:new Array(n).fill(null), completed:false, poolRevealed:false, filledCells:0, expectedP1:{}, expectedP2:{}, genotypeColors:genotypeColors, phenotypeCounts:{}};
 
   const card=document.createElement("div");
   card.className="trait-card";
@@ -546,6 +571,13 @@ TRAITS.forEach(trait=>{
           <div class="pool-chips" id="comboChipsP1_${trait.id}"></div>
           <div class="pool-label" style="margin-top:10px;">👩 Alelos do Genitor 2 (arraste para o lado direito da célula)</div>
           <div class="pool-chips" id="comboChipsP2_${trait.id}"></div>
+        </div>
+      </div>
+      <div class="phenotype-panel" id="phenotypePanel_${trait.id}">
+        <div class="phenotype-title">Influência dos genótipos</div>
+        <div class="phenotype-sub">As imagens aparecem conforme as combinações corretas são formadas.</div>
+        <div class="phenotype-list" id="phenotypeList_${trait.id}">
+          <div class="phenotype-empty">Monte o quadro para visualizar os fenótipos gerados.</div>
         </div>
       </div>
     </div>
@@ -738,6 +770,38 @@ function makeAlleleTile(traitId,side,value,idx){
   });
   return chip;
 }
+function updatePhenotypePanel(trait,genotype,phenotype,colorInfo){
+  const st=state[trait.id];
+  const key=phenotype.label;
+  if(!st.phenotypeCounts[key]){
+    st.phenotypeCounts[key]={icon:phenotype.icon,label:phenotype.label,count:0,genotypes:new Set(),color:colorInfo};
+  }
+  st.phenotypeCounts[key].count++;
+  st.phenotypeCounts[key].genotypes.add(genotype);
+  if(colorInfo) st.phenotypeCounts[key].color=colorInfo;
+
+  const list=document.getElementById("phenotypeList_"+trait.id);
+  const items=Object.values(st.phenotypeCounts).sort((a,b)=>b.count-a.count || a.label.localeCompare(b.label));
+  list.innerHTML=items.map(item=>{
+    const border=item.color? item.color.border : "#764ba2";
+    const bg=item.color? item.color.bg : "#eef1f7";
+    return `<div class="phenotype-item" style="border-color:${border};">
+      <div class="phenotype-img" style="background:${bg};">${item.icon}</div>
+      <div>
+        <div class="phenotype-name">${item.label}</div>
+        <div class="phenotype-genos">Genótipos: ${Array.from(item.genotypes).sort().join(", ")}</div>
+      </div>
+      <div class="phenotype-count">${item.count}x</div>
+    </div>`;
+  }).join("");
+}
+function resetPhenotypePanel(trait){
+  state[trait.id].phenotypeCounts={};
+  const list=document.getElementById("phenotypeList_"+trait.id);
+  if(list){
+    list.innerHTML='<div class="phenotype-empty">Monte o quadro para visualizar os fenótipos gerados.</div>';
+  }
+}
 function handleAlleleDrop(trait,r,c,side,value,tileId){
   const st=state[trait.id];
   const key=r+"_"+c;
@@ -766,8 +830,9 @@ function handleAlleleDrop(trait,r,c,side,value,tileId){
       const colorInfo = st.genotypeColors[genotype];
       if(cellEl && colorInfo){
         cellEl.style.background = colorInfo.bg;
-        cellEl.style.boxShadow = `6px 6px 12px rgba(0,0,0,.16), -4px -4px 10px rgba(255,255,255,.9), inset 0 0 0 3px ${colorInfo.border}`;
+        cellEl.style.boxShadow = `0 2mm 3mm rgba(34,39,48,.20), 8px 8px 15px rgba(0,0,0,.16), -5px -5px 12px rgba(255,255,255,.92), inset 0 0 0 3px ${colorInfo.border}`;
       }
+      updatePhenotypePanel(trait,genotype,ph,colorInfo);
 
       // confete a cada combinação correta
       if(cellEl){
@@ -801,6 +866,7 @@ function resetTrait(trait){
   state[trait.id].filledCells=0;
   state[trait.id].expectedP1={};
   state[trait.id].expectedP2={};
+  resetPhenotypePanel(trait);
   document.querySelectorAll(`[id^="drop_${trait.id}_"]`).forEach(dz=>{dz.textContent="?";dz.classList.remove("filled");});
   document.querySelectorAll(`[id^="slotp1_${trait.id}_"], [id^="slotp2_${trait.id}_"]`).forEach(s=>{s.textContent="?";s.classList.remove("filled","wrong-flash");});
   document.querySelectorAll(`[id^="cellresult_${trait.id}_"]`).forEach(c=>c.innerHTML="");
@@ -855,6 +921,23 @@ const studentSelect=document.getElementById("studentSelect");
 const turmaSelect=document.getElementById("turmaSelect");
 const numLine=document.getElementById("numLine");
 const emailInput=document.getElementById("emailInput");
+const dataInput=document.getElementById("dataInput");
+
+function formatCurrentDate(){
+  const now=new Date();
+  const day=String(now.getDate()).padStart(2,"0");
+  const month=String(now.getMonth()+1).padStart(2,"0");
+  const year=now.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+function fillCurrentDate(){
+  dataInput.value=formatCurrentDate();
+  updateProgress();
+}
+dataInput.readOnly=true;
+dataInput.title="Data preenchida automaticamente";
+fillCurrentDate();
+setInterval(fillCurrentDate, 60 * 60 * 1000);
 
 const grouped={"9oA":[],"9oB":[]};
 STUDENTS.forEach(s=>grouped[s.t].push(s));
@@ -877,7 +960,7 @@ studentSelect.addEventListener("change",()=>{
   emailInput.value=s.email||"";
   updateProgress();
 });
-document.getElementById("dataInput").addEventListener("input",updateProgress);
+dataInput.addEventListener("input",updateProgress);
 
 /* =========================================================================
    8) ENVIO (JSONP + base64) — padrão Apps Script existente
