@@ -411,14 +411,20 @@ function getGametes(genotype){
 }
 function combineGenotype(gamete1,gamete2,traitGenes){
   // cada gamete tem 1 letra por gene, na mesma ordem dos genes do trait
+  // OBS: trim() defensivo contra eventuais espaços invisíveis vindos do drag-and-drop
+  const g1 = (gamete1||"").toString();
+  const g2 = (gamete2||"").toString();
   let result="";
   for(let g=0;g<traitGenes.length;g++){
-    const a1=gamete1[g], a2=gamete2[g];
+    const a1=(g1[g]||"").trim(), a2=(g2[g]||"").trim();
     const dom=traitGenes[g].dom;
-    // dominante primeiro na escrita
-    if(a1===dom || a2===dom){
-      result += (a1===dom?a1:a2) + (a1===dom?a2:a1);
+    // dominante SEMPRE primeiro na escrita, não importa se veio do Genitor 1 ou 2
+    if(a1===dom){
+      result += a1+a2;
+    } else if(a2===dom){
+      result += a2+a1;
     } else {
+      // nenhum dos dois é dominante -> homozigoto recessivo, ordem é irrelevante
       result += a1+a2;
     }
   }
